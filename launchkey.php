@@ -3,7 +3,7 @@
   Plugin Name: LaunchKey
   Plugin URI: https://launchkey.com
   Description: Log in to WordPress with LaunchKey. Kill Passwords!
-  Version: 0.1.0
+  Version: 0.1.1
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
