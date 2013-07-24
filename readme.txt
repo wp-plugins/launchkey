@@ -1,7 +1,7 @@
 === LaunchKey ===
 Contributors: launchkey 
 Donate link: https://launchkey.com/
-Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity
+Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa
 Requires at least: 3.5
 Tested up to: 3.5.2
 Stable tag: 0.1.1
