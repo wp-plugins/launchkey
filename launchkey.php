@@ -1,9 +1,9 @@
 <?php
 /*
   Plugin Name: LaunchKey
-  Plugin URI: https://launchkey.com
+  Plugin URI: https://wordpress.org/plugins/launchkey/
   Description: Log in to WordPress with LaunchKey. Kill Passwords!
-  Version: 0.1.1
+  Version: 0.1.2
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
@@ -34,39 +34,36 @@ class LaunchKey {
      */
     public function check_option($input) {
         if(isset($input['app_key'])) {
-            $app_key = $input['app_key'];			
-            if(get_option('launchkey_app_key') === FALSE) {
-                add_option('launchkey_app_key', $app_key);
+            if(is_numeric($input['app_key']) || $input['secret_key'] == '') {
+                $app_key = $input['app_key'];
+                if(get_option('launchkey_app_key') === FALSE) {
+                    add_option('launchkey_app_key', $app_key);
+                } else {
+                    update_option('launchkey_app_key', $app_key);
+                }
             } else {
-                update_option('launchkey_app_key', $app_key);
+                $app_key = '';
             }
         } else {
             $app_key = '';
         }
 
         if(isset($input['secret_key'])) {
-            $secret_key = $input['secret_key'];			
-            if(get_option('launchkey_secret_key') === FALSE){
-                add_option('launchkey_secret_key', $secret_key);
+            if(ctype_alnum($input['secret_key']) || $input['secret_key'] == '') {
+                $secret_key = $input['secret_key'];
+                if(get_option('launchkey_secret_key') === FALSE){
+                    add_option('launchkey_secret_key', $secret_key);
+                } else {
+                    update_option('launchkey_secret_key', $secret_key);
+                }
             } else {
-                update_option('launchkey_secret_key', $secret_key);
+                $secret_key = '';
             }
         } else {
             $secret_key = '';
         }
 
-        if(isset($input['domain'])) {
-            $domain = $input['domain'];			
-            if(get_option('launchkey_domain') === FALSE){
-                add_option('launchkey_domain', $domain);
-            } else {
-                update_option('launchkey_domain', $domain);
-            }
-        } else {
-            $domain = '';
-        }
-
-        $options = array($app_key, $secret_key, $domain);
+        $options = array($app_key, $secret_key);
         return $options;
     }
 
@@ -134,7 +131,12 @@ class LaunchKey {
                 //make oauth call
                 $params = http_build_query($data);
                 $oauth_get = wp_remote_get("https://oauth.launchkey.com/access_token?" . $params);
-                $oauth_response = json_decode($oauth_get['body'], true);
+
+                if(is_string($oauth_get['body'])) {
+                    $oauth_response = json_decode($oauth_get['body'], true);
+                } else {
+                    wp_redirect(wp_login_url() . "?launchkey-error=true");
+                }
 
                 if(isset($oauth_response['user']) && isset($oauth_response['access_token'])) {
                     //vars
@@ -196,7 +198,7 @@ class LaunchKey {
             echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> The LaunchKey request was denied or an issue was detected during authentication. Please try again. </p></div><br>';
         }
         if (isset($_GET['launchkey-pair'])) {
-            echo '<div style="padding:10px;background-color:#eef5ff;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Almost finished!</strong> Login with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!</p></div><br>';
+            echo '<div style="padding:10px;background-color:#eef5ff;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Almost finished!</strong> Log in with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!</p></div><br>';
         } else {
             $login_url = 'https://oauth.launchkey.com/authorize?client_id=' . $app_key . '&redirect_uri=' . $redirect;
             echo '
@@ -205,7 +207,7 @@ class LaunchKey {
                         <span style="display:inline-block;padding:0;">
                             <span style="margin:0 5px -10px 0;display:inline-block;height:30px;width:28px;background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjQsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxhdW5jaEtleV9Mb2dvIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiDQoJIHk9IjBweCIgd2lkdGg9IjEwMDBweCIgaGVpZ2h0PSIxMTU5LjQycHgiIHZpZXdCb3g9IjAgMCAxMDAwIDExNTkuNDIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMDAgMTE1OS40MiINCgkgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZmlsbD0iIzQxNjhCMSIgZD0iTTUwMi4zNjQsMTE0My44MTJDMjYzLjk0LDExNTIuNTkxLDY2LjI4Myw5NjYuMzM3LDI2LjQwNSw3NDkuMDENCgkJQy01LjY3Myw1NzQuMTk1LDYxLjMzNiwzNzYuMDExLDIxNi41NTksMjY0LjE0OGMxMi44OS05LjI5MywyNi40ODEtMTcuNjczLDQwLjE5OC0yNS43MDFjMy42MS0yLjExMiw5Ljg0OC0zLjA1NCwxMy4xMzUtMS4yODYNCgkJYzIuNDI0LDEuMzAzLDMuMjE0LDguMDQzLDIuNjc1LDEyLjA4NmMtNy43NjMsNTguNjc4LTkuMTI4LDExNy4zMTcsMC40NzUsMTc1LjkxMmMxLjI4LDcuODItMy4yMTIsMTIuNTktNy4wNDUsMTguMTA0DQoJCWMtMTMuMjMxLDE5LjAzNi0yNy44MDEsMzcuMzM2LTM5LjIwMSw1Ny40MjljLTk2LjkwMywxNzAuODI4LTIwLjc2LDM3OC4yNSwxNjIuNzc2LDQ1Mi4wMjUNCgkJYzE4MS43NzksNzMuMDY2LDM5NC4yNjQtNDkuNjIsNDI2LjMzLTIzOS40MzFjMTUuMzMxLTkwLjc3LTUuODMyLTE3Mi45ODktNTkuMjQ1LTI0Ny4zNTZjLTYuNDUtOC45ODktMTMuODk4LTE3LjI5LTE5Ljg5NS0yNi41NDkNCgkJYy0yLjY3OC00LjEzMS00LjY4My0xMC4xMDktMy45NjYtMTQuNzkxYzguMjU3LTU0LjA2Miw3LjgxMi0xMDguMTQxLDEuNTA1LTE2Mi4yOTljLTAuNjIyLTUuMzYzLTEuNTIzLTEwLjY5NS0yLjA2Ny0xNi4wNjINCgkJYy0wLjk3LTkuNTgyLDUuMDYxLTE0LjI0LDEzLjM3NS05LjQwNmMxNC42NzIsOC41MjUsMjkuMzY3LDE3LjIyLDQzLjAyMSwyNy4yNTRjODguNjA1LDY1LjExMSwxNDYuNjg0LDE1MS4yMDksMTc4LjM5NiwyNTYuNDAzDQoJCWM1Ny4xMjIsMTg5LjQ1NC02LjA0NCw0MjcuMTI5LTIxMy41NzUsNTU2LjIzNUM2NzYuMDg3LDExMjQuODQ2LDYwNC43MjIsMTE0My43MDcsNTAyLjM2NCwxMTQzLjgxMnoiLz4NCgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZmlsbD0iIzQxNjhCMSIgZD0iTTU0MS4yNzQsNjUzLjMxMmMtMy41NzksMjkuMzkyLTE3LjU0OCw0NS41MDMtMzguNDUsNDUuMzU2DQoJCWMtMjAuODQzLTAuMTM4LTM0LjA4OS0xNS41NC0zOC4zMTQtNDUuMzc1Yy0xNi44NDIsMC44MzMtMzQuMTA5LTMuMDc3LTUwLjYyLDcuMDc2Yy0xOS4yNSwxMS44MjgtMzkuNzcyLDIxLjYtNTkuNzg4LDMyLjE4MQ0KCQljLTguMTUyLDQuMzExLTExLjA0NywyLjc4LTEyLjUyMi02LjI3NWMtMTEuNDk4LTcwLjU4MSwyMC4yMy0xMzcuMjUyLDgyLjY3Mi0xNzMuMjU2YzMuOTI0LTIuMjY3LDQuOTIzLTQuMjQ1LDQuMTc5LTguODM1DQoJCWMtNi41MDMtNDAuMTk0LTE0LjYyOS04MC4yNjEtMTguNDQtMTIwLjcyN2MtNi43MS03MS4zMTIsMS4zNzQtMTQxLjY2MSwxOS44OTgtMjEwLjg4Mw0KCQljMTIuMjQ0LTQ1Ljc3MSwyOC44NzMtODkuODI1LDQ5LjY3Ny0xMzIuMzMyYzMuNDIyLTYuOTkxLDcuMjIzLTEzLjk1OCwxMS45MDctMjAuMTI3YzcuNTI5LTkuOTEyLDE1LjQzOC05LjczNywyMy4xNiwwLjE2Ng0KCQljMy43ODMsNC44NTcsNy4wMSwxMC4yNzUsOS43MzcsMTUuODA2YzUwLjMyNCwxMDIuMjExLDc3LjA2MywyMDkuNzc0LDczLjQxNywzMjQuMjMyYy0xLjM2Myw0Mi44MDctOS4zMyw4NC42ODgtMTcuMDQzLDEyNi42MjMNCgkJYy0xLjMxNSw3LjE1Ny01LjMyNiwxNS4zOTUtMy4wNzIsMjEuMThjMi4xNDMsNS41MDUsMTAuOTUxLDguMzE5LDE2LjY2OSwxMi41MzNjNTYuNDY4LDQxLjY0LDc5LjcwOSw5Ny4yNTMsNjkuODIxLDE2Ni42NzQNCgkJYy0xLjEwNCw3Ljc1LTQuNTgzLDkuMzAyLTExLjg2Myw1LjQ2MWMtMjAuOTg3LTExLjA0OS00Mi4wNjQtMjEuOTQtNjIuNzcxLTMzLjUwMWMtNy44NDItNC4zODMtMTUuNjItNi4zMjItMjQuNTM2LTYuMDY3DQoJCUM1NTcuNDE4LDY1My40MzgsNTQ5LjQ1MSw2NTMuMzEyLDU0MS4yNzQsNjUzLjMxMnoiLz4NCjwvZz4NCjwvc3ZnPg0K);background-position:0 0;background-size:28px 30px;background-repeat:no-repeat;"></span>
                             </span>
-                        <a href="' . $login_url . '" title="Login with LaunchKey" style="text-decoration:none;">Login with LaunchKey</a>
+                        <a href="' . $login_url . '" title="Log in with LaunchKey" style="text-decoration:none;">Log in with LaunchKey</a>
                     </span>
                 </span><br>';
         }
@@ -242,7 +244,7 @@ class LaunchKey {
             $oauth_response = wp_remote_request("https://oauth.launchkey.com/resource/ping", $args);
             if($oauth_response['body'] != '{"message": "valid"}') {
                 wp_logout();
-                wp_redirect(wp_login_url());
+                wp_redirect(wp_login_url() . "?loggedout=true");
             }
         }
 

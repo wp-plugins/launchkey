@@ -4,15 +4,16 @@ Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-[LaunchKey](https://launchkey.com) is evolving user authentication by eliminating passwords with multi-factor authentication on smartphones and tablets. LaunchKey's free App enables users on websites, applications and other systems to securely and privately authenticate without passwords. For implementers, LaunchKey provides a trustworthy alternative to password-based user authentication while reducing the liability passwords create.
+This plugin enables a [LaunchKey](https://launchkey.com) user to pair with a WordPress user for authentication.
 
-This plugin enables a LaunchKey user to pair with a WordPress user for authentication. 
+[LaunchKey](https://launchkey.com) is evolving user authentication by eliminating passwords with multi-factor authentication on smartphones and tablets. LaunchKey's free app enables users on websites, applications and other systems to securely and privately authenticate without passwords. For implementers, LaunchKey provides a trustworthy alternative to password-based user authentication while reducing the liability passwords create.
+
 
 == Installation ==
 
@@ -60,6 +61,9 @@ LaunchKey for your device and creating an App for your WordPress installation ar
 You can always unpair any device at any time at: https://launchkey.com/unpair
 
 == Changelog ==
+
+= 0.1.2 =
+* Updates based on initial user feedback.
 
 = 0.1.1 =
 * Minor updates to readme.txt  
