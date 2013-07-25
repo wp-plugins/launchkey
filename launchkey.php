@@ -3,7 +3,7 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description: Log in to WordPress with LaunchKey. Kill Passwords!
-  Version: 0.1.2
+  Version: 0.1.3
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
@@ -34,7 +34,7 @@ class LaunchKey {
      */
     public function check_option($input) {
         if(isset($input['app_key'])) {
-            if(is_numeric($input['app_key']) || $input['secret_key'] == '') {
+            if(is_numeric($input['app_key']) || $input['app_key'] === '') {
                 $app_key = $input['app_key'];
                 if(get_option('launchkey_app_key') === FALSE) {
                     add_option('launchkey_app_key', $app_key);
@@ -49,7 +49,7 @@ class LaunchKey {
         }
 
         if(isset($input['secret_key'])) {
-            if(ctype_alnum($input['secret_key']) || $input['secret_key'] == '') {
+            if(ctype_alnum($input['secret_key']) || $input['secret_key'] === '') {
                 $secret_key = $input['secret_key'];
                 if(get_option('launchkey_secret_key') === FALSE){
                     add_option('launchkey_secret_key', $secret_key);
@@ -105,21 +105,8 @@ class LaunchKey {
             wp_redirect(wp_login_url() . "?launchkey-error=true");
         }
 
-        //check for the nonce, set the appropriate vars and invalidate the nonce if used
-        if(isset($_GET['launchkey-nonce']) && isset($_COOKIE['launchkey_nonce_name'])) {
-            $nonce_get = $_GET['launchkey-nonce'];
-            $nonce_name = $_COOKIE['launchkey_nonce_name'];
-            $nonce_transient = get_transient('launchkey_nonce' . $nonce_name);
-            set_transient('launchkey_nonce' . $nonce_name, 0, 0);
-        } else {
-            wp_redirect(wp_login_url() . "?launchkey-error=true");
-        }
-
-        //nonce check
-        if ($nonce_get != $nonce_transient)  {
-            wp_redirect(wp_login_url() . "?launchkey-error=true");
-        } else {
-            if(isset($_GET['code'])) {
+        if(isset($_GET['code'])) {
+            if(ctype_alnum($_GET['code']) && strlen($_GET['code']) === 64) {
                 //prepare data for access token
                 $data = array();
                 $data['client_id'] = get_option('launchkey_app_key');
@@ -162,12 +149,12 @@ class LaunchKey {
                             wp_redirect(wp_login_url() . "?launchkey-error=true");
                         }
                     } else {
-                            //First Time Pair?
-                            setcookie('launchkey_user', $launchkey_user, time() + 300, COOKIEPATH, COOKIE_DOMAIN);
-                            setcookie('launchkey_access_token', $launchkey_access_token, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
-                            setcookie('launchkey_refresh_token', $launchkey_refresh_token, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
-                            setcookie('launchkey_expires', $launchkey_expires, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
-                            wp_redirect(wp_login_url() . "?launchkey-pair=true");
+                        //First Time Pair?
+                        setcookie('launchkey_user', $launchkey_user, time() + 300, COOKIEPATH, COOKIE_DOMAIN);
+                        setcookie('launchkey_access_token', $launchkey_access_token, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
+                        setcookie('launchkey_refresh_token', $launchkey_refresh_token, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
+                        setcookie('launchkey_expires', $launchkey_expires, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
+                        wp_redirect(wp_login_url() . "?launchkey-pair=true");
                     }
                 } else {
                     wp_redirect(wp_login_url() . "?launchkey-error=true");
@@ -175,6 +162,8 @@ class LaunchKey {
             } else {
                 wp_redirect(wp_login_url() . "?launchkey-error=true");
             }
+        } else {
+            wp_redirect(wp_login_url() . "?launchkey-error=true");
         }
     } //end function launchkey_callback
 
@@ -187,13 +176,7 @@ class LaunchKey {
     public function launchkey_form() {
         $app_key = get_option('launchkey_app_key');
 
-        //generate nonce
-        $nonce_name = rand(10000000000, 20000000000);
-        $nonce = rand(10000000000, 20000000000);
-        setcookie('launchkey_nonce_name', $nonce_name, time() + 300, COOKIEPATH, COOKIE_DOMAIN);
-        set_transient('launchkey_nonce' . $nonce_name, $nonce, 300);
-
-        $redirect = admin_url('admin-ajax.php?action=launchkey-callback&launchkey-nonce=' . $nonce);
+        $redirect = admin_url('admin-ajax.php?action=launchkey-callback');
         if (isset($_GET['launchkey-error'])) {
             echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> The LaunchKey request was denied or an issue was detected during authentication. Please try again. </p></div><br>';
         }
@@ -233,7 +216,6 @@ class LaunchKey {
      *
      */
     public function launchkey_page_init() {
-
         //check status of oauth access token
         if (isset($_COOKIE['launchkey_access_token'])) {
             $args = array(
@@ -270,7 +252,7 @@ class LaunchKey {
     } //end function launchkey_page_init
 
     /**
-     * launchkey-pair - pair a launchkey user with the wordpress user. performed during wp_login.
+     * launchkey-pair - pair a launchkey user with the WordPress user. performed during wp_login.
      *
      * @param mixed $not_used - required
      * @param mixed $user

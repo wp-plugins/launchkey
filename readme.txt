@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,9 @@ LaunchKey for your device and creating an App for your WordPress installation ar
 You can always unpair any device at any time at: https://launchkey.com/unpair
 
 == Changelog ==
+
+= 0.1.3 =
+* Fixed Header Issue some installations were reporting. No new features at this time.
 
 = 0.1.2 =
 * Updates based on initial user feedback.
