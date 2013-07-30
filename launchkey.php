@@ -3,11 +3,13 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description: Log in to WordPress with LaunchKey. Kill Passwords!
-  Version: 0.1.3
+  Version: 0.2.0
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
  */
+
+define('LAUNCHKEY_SSLVERIFY', 1); //Only modify to 0 if SSL certificates are broken on server!
 
 class LaunchKey {
 
@@ -23,9 +25,10 @@ class LaunchKey {
             add_action('admin_menu', array($this, 'launchkey_plugin_page'));
             add_action('admin_init', array($this, 'launchkey_page_init'));
             add_action('wp_ajax_launchkey-callback', array($this, 'launchkey_callback'));
-            add_action('wp_ajax_nopriv_launchkey-callback',  array($this, 'launchkey_callback'));
+            add_action('wp_ajax_nopriv_launchkey-callback', array($this, 'launchkey_callback'));
+            add_action('profile_personal_options', array($this, 'launchkey_personal_options'));
         }
-    }
+    } //end __construct
 
     /**
      * check_option - used by launchkey_page_init
@@ -35,7 +38,7 @@ class LaunchKey {
     public function check_option($input) {
         if(isset($input['app_key'])) {
             if(is_numeric($input['app_key']) || $input['app_key'] === '') {
-                $app_key = $input['app_key'];
+                $app_key = (int) trim($input['app_key']);
                 if(get_option('launchkey_app_key') === FALSE) {
                     add_option('launchkey_app_key', $app_key);
                 } else {
@@ -50,7 +53,7 @@ class LaunchKey {
 
         if(isset($input['secret_key'])) {
             if(ctype_alnum($input['secret_key']) || $input['secret_key'] === '') {
-                $secret_key = $input['secret_key'];
+                $secret_key = trim($input['secret_key']);
                 if(get_option('launchkey_secret_key') === FALSE){
                     add_option('launchkey_secret_key', $secret_key);
                 } else {
@@ -65,7 +68,7 @@ class LaunchKey {
 
         $options = array($app_key, $secret_key);
         return $options;
-    }
+    } //end check_option
 
     /**
      * create_admin_page - used by launchkey_plugin_page
@@ -80,21 +83,21 @@ class LaunchKey {
         submit_button();
         echo '    </form>';
         echo '</div>';
-    }
+    } //end create_admin_page
 
     /**
      * create_app_key_field
      */
     public function create_app_key_field() {
         echo '<input type="text" id="app_key" name="array_key[app_key]" value="'  . get_option('launchkey_app_key') . '">';
-    }
+    } //end create_app_key_field
 
     /**
      * create_app_key_secret
      */
     public function create_secret_key_field() {
         echo '<input type="text" id="secret_key" name="array_key[secret_key]" value="'  . get_option('launchkey_secret_key') . '">';
-    }
+    } //end create_app_key_secret
 
     /**
      * launchkey_callback - handle the oauth callback and authenticate/pair. performed by wp_ajax*_callback action
@@ -102,7 +105,7 @@ class LaunchKey {
      */
     public function launchkey_callback() {
         if(isset($_GET['error'])) {
-            wp_redirect(wp_login_url() . "?launchkey-error=true");
+            wp_redirect(wp_login_url() . "?launchkey-error=1");
         }
 
         if(isset($_GET['code'])) {
@@ -117,12 +120,16 @@ class LaunchKey {
 
                 //make oauth call
                 $params = http_build_query($data);
-                $oauth_get = wp_remote_get("https://oauth.launchkey.com/access_token?" . $params);
+                if(LAUNCHKEY_SSLVERIFY) {
+                    $oauth_get = wp_remote_get("https://oauth.launchkey.com/access_token?" . $params);
+                } else {
+                    $oauth_get = wp_remote_get("https://oauth.launchkey.com/access_token?" . $params, array('sslverify' => false));
+                }
 
-                if(is_string($oauth_get['body'])) {
+                if(!is_wp_error($oauth_get)) {
                     $oauth_response = json_decode($oauth_get['body'], true);
                 } else {
-                    wp_redirect(wp_login_url() . "?launchkey-error=true");
+                    wp_redirect(wp_login_url() . "?launchkey-ssl-error=1");
                 }
 
                 if(isset($oauth_response['user']) && isset($oauth_response['access_token'])) {
@@ -146,24 +153,31 @@ class LaunchKey {
                             setcookie('launchkey_expires', $launchkey_expires, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
                             wp_redirect(admin_url());
                         } else {
-                            wp_redirect(wp_login_url() . "?launchkey-error=true");
+                            wp_redirect(wp_login_url() . "?launchkey-error=1");
                         }
                     } else {
-                        //First Time Pair?
+                        //First Time Pair
                         setcookie('launchkey_user', $launchkey_user, time() + 300, COOKIEPATH, COOKIE_DOMAIN);
                         setcookie('launchkey_access_token', $launchkey_access_token, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
                         setcookie('launchkey_refresh_token', $launchkey_refresh_token, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
                         setcookie('launchkey_expires', $launchkey_expires, time() + (86400 * 7), COOKIEPATH, COOKIE_DOMAIN);
-                        wp_redirect(wp_login_url() . "?launchkey-pair=true");
+
+                        if(!current_user_can('manage_options')) {
+                            //not previously logged in
+                            wp_redirect(wp_login_url() . "?launchkey-pair=1");
+                        } else {
+                            //previously authenticated
+                            wp_redirect(admin_url("profile.php?launchkey-admin-pair=1&updated=1"));
+                        }
                     }
                 } else {
-                    wp_redirect(wp_login_url() . "?launchkey-error=true");
+                    wp_redirect(wp_login_url() . "?launchkey-error=1");
                 }
             } else {
-                wp_redirect(wp_login_url() . "?launchkey-error=true");
+                wp_redirect(wp_login_url() . "?launchkey-error=1");
             }
         } else {
-            wp_redirect(wp_login_url() . "?launchkey-error=true");
+            wp_redirect(wp_login_url() . "?launchkey-error=1");
         }
     } //end function launchkey_callback
 
@@ -179,6 +193,8 @@ class LaunchKey {
         $redirect = admin_url('admin-ajax.php?action=launchkey-callback');
         if (isset($_GET['launchkey-error'])) {
             echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> The LaunchKey request was denied or an issue was detected during authentication. Please try again. </p></div><br>';
+        } elseif (isset($_GET['launchkey-ssl-error'])) {
+            echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> There was an error trying to request the LaunchKey servers. If this persists you may need to disable SSL verification. </p></div><br>';
         }
         if (isset($_GET['launchkey-pair'])) {
             echo '<div style="padding:10px;background-color:#eef5ff;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Almost finished!</strong> Log in with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!</p></div><br>';
@@ -204,7 +220,12 @@ class LaunchKey {
      */
     public function launchkey_logout() {
         if (isset($_COOKIE['launchkey_access_token'])) {
-            wp_remote_get('https://oauth.launchkey.com/logout?access_token=' . $_COOKIE['launchkey_access_token']);
+            if(LAUNCHKEY_SSLVERIFY) {
+                wp_remote_get('https://oauth.launchkey.com/logout?access_token=' . $_COOKIE['launchkey_access_token']);
+            } else {
+                wp_remote_get('https://oauth.launchkey.com/logout?access_token=' . $_COOKIE['launchkey_access_token'], array('sslverify' => false));
+            }
+            setcookie('launchkey_user', '1', time() - 60, COOKIEPATH, COOKIE_DOMAIN);
             setcookie('launchkey_access_token', '1', time() - 60, COOKIEPATH, COOKIE_DOMAIN);
             setcookie('launchkey_refresh_token', '1', time() - 60, COOKIEPATH, COOKIE_DOMAIN);
             setcookie('launchkey_expires', '1', time() - 60, COOKIEPATH, COOKIE_DOMAIN);
@@ -216,17 +237,44 @@ class LaunchKey {
      *
      */
     public function launchkey_page_init() {
+        if(isset($_GET['launchkey-unpair'])) {
+            $user = wp_get_current_user();
+            $this->launchkey_unpair($user->data);
+            wp_logout();
+        }
+
+        if(isset($_GET['launchkey-remove-password'])){
+            $user = wp_get_current_user();
+            if($user->data->ID > 0 ) {
+                wp_update_user(array('ID'=> $user->data->ID, 'user_pass'=>''));
+                wp_logout();
+            }
+        }
+
+        if(isset($_GET['launchkey-admin-pair'])) {
+            $user = wp_get_current_user();
+            $this->launchkey_pair("", $user->data);
+        }
+
         //check status of oauth access token
         if (isset($_COOKIE['launchkey_access_token'])) {
-            $args = array(
-                'headers' => array(
-                    'Authorization' => 'Bearer ' . $_COOKIE['launchkey_access_token']
-                )
-            );
+            if(LAUNCHKEY_SSLVERIFY) {
+                $args = array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $_COOKIE['launchkey_access_token']
+                    )
+                );
+            } else {
+                $args = array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $_COOKIE['launchkey_access_token']
+                    ), 'sslverify' => false
+                );
+            }
             $oauth_response = wp_remote_request("https://oauth.launchkey.com/resource/ping", $args);
             if($oauth_response['body'] != '{"message": "valid"}') {
                 wp_logout();
-                wp_redirect(wp_login_url() . "?loggedout=true");
+                wp_redirect(wp_login_url() . "?loggedout=1");
             }
         }
 
@@ -252,7 +300,7 @@ class LaunchKey {
     } //end function launchkey_page_init
 
     /**
-     * launchkey-pair - pair a launchkey user with the WordPress user. performed during wp_login.
+     * launchkey_pair - pair a launchkey user with the WordPress user. performed during wp_login.
      *
      * @param mixed $not_used - required
      * @param mixed $user
@@ -261,9 +309,38 @@ class LaunchKey {
      */
     public function launchkey_pair($not_used, $user) {
         if (isset($_COOKIE['launchkey_user'])) {
-            update_user_meta($user->ID, "launchkey_user", $_COOKIE['launchkey_user']);
+            if(is_numeric($user->ID) && $user->ID > 0 && ctype_alnum($_COOKIE['launchkey_user']) && strlen($_COOKIE['launchkey_user']) > 10) {
+                update_user_meta($user->ID, "launchkey_user", $_COOKIE['launchkey_user']);
+            }
         }
-    } //end launchkey-pair
+    } //end launchkey_pair
+
+    /**
+     * launchkey_personal_options
+     *
+     * @param $user
+     */
+    public function launchkey_personal_options($user) {
+        echo '<div class="wrap">';
+        echo '    <h3>LaunchKey Options</h3>';
+        $user_meta = get_user_meta($user->data->ID);
+        if(array_key_exists('launchkey_user', $user_meta)) {
+            //check if password is set before allowing unpair
+            if(!empty($user->data->user_pass)) {
+                $url= admin_url('/profile.php?launchkey-unpair=1');
+                $password_url= admin_url('/profile.php?launchkey-remove-password=1');
+                echo '<p><em>Note</em>: unpairing a device or removing your WP password will log you out of WordPress.</p><table class="form-table"><tr><th>Status: <em>paired</em></th><td><a href="' . $url . '" title="Click here to unpair your LaunchKey account with this WordPress account">Unpair</a></td></tr><tr><th>WP Password</th><td><a href="' . $password_url . ' " title="Click here to remove your WordPress password">Remove WP password</a></td></tr></table>';
+            } else {
+                echo '<table class="form-table"><tr><th>Status: <em>paired</em></th><td></td></tr><tr><th>WP Password</th><td><em>Removed</em>, use form below to add password</td></tr></table>';
+            }
+        } else {
+            $app_key = get_option('launchkey_app_key');
+            $redirect = admin_url('admin-ajax.php?action=launchkey-callback&launchkey-admin-pair=1');
+            $login_url = 'https://oauth.launchkey.com/authorize?client_id=' . $app_key . '&redirect_uri=' . $redirect;
+            echo '<table class="form-table"><tr><th>Status: <em>not paired</em></th><td><a href="' . $login_url . '" title="Click here to pair your LaunchKey account with this WordPress account">Click to pair</a></td></tr></table>';
+        }
+        echo '</div>';
+    } //end launchkey_personal_options
 
     /**
      * launchkey_plugin_page - performed by admin_menu action
@@ -281,6 +358,19 @@ class LaunchKey {
     public function launchkey_section_info(){
 	    echo 'For Setup information please see the <a href="https://launchkey.com/docs/plugins/wordpress">LaunchKey WordPress Documentation</a>.';
     } //end function launchkey_section_info
+
+    /**
+     * launchkey_unpair - unpair a launchkey user with the WordPress user.
+     *
+     * @param mixed $user
+     * @access public
+     * @return void
+     */
+    public function launchkey_unpair($user) {
+        if(is_numeric($user->ID) && $user->ID > 0) {
+            delete_user_meta($user->ID, 'launchkey_user');
+        }
+    } //end launchkey-pair
 
 
 } //end class LaunchKey

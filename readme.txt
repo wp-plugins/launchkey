@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 0.1.3
+Stable tag: 0.2.0
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,12 +41,14 @@ https://launchkey.com/docs/plugins/wordpress
 
 6. Locate the "LaunchKey" settings section and enter your "App Key" and "Secret Key" from step 3.
 
-7. Now logout of the admin section. "Login with LaunchKey" should be visible on the bottom of the login form.
+7. Now you need to pair your LaunchKey user with your WordPress account. There are two ways to accomplish this.
+A) Click on Users > Your Profile and find "LaunchKey Options." Click on the "pair" link and complete the login with LaunchKey.
+After successful LaunchKey login your Users > Profile "LaunchKey Options" will indicate that your accounts are paired and you are done.
+
+B) Log out of the admin section. "Log in with LaunchKey" should be visible on the bottom of the login form.
 Click through and authenticate with LaunchKey.
-
-8. On the first success you will be asked to login with your username/password to create the initial user pairing.
-
-9. After logging in with your username/password for the last time you are done.
+On the first success you will be asked to login with your username/password to create the initial user pairing.
+After logging in with your username/password for the last time you are done.
 
 Simply login with LaunchKey from this point forward!
 
@@ -61,6 +63,9 @@ LaunchKey for your device and creating an App for your WordPress installation ar
 You can always unpair any device at any time at: https://launchkey.com/unpair
 
 == Changelog ==
+
+= 0.2.0 =
+* Pair/Unpair accounts within the User Profile. Allow a User to remove their password and enable LaunchKey only login.
 
 = 0.1.3 =
 * Fixed Header Issue some installations were reporting. No new features at this time.
