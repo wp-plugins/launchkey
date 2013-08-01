@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,8 +60,11 @@ The LaunchKey WordPress plugin utilizes the popular OAuth 2.0 protocol so when y
 
 == Changelog ==
 
+= 0.2.2 =
+* Fix for issue 32bit servers had with large App Keys. 
+
 = 0.2.1 =
-* readme.txt updates. Added screenshots, FAQ, etc.
+* readme.txt updates. Added screenshots, FAQ and updated content.
 
 = 0.2.0 =
 * Pair/Unpair accounts within the User Profile. Allow a User to remove their password and enable LaunchKey only login.
