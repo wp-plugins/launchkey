@@ -1,68 +1,67 @@
 === LaunchKey ===
 Contributors: launchkey 
 Donate link: https://launchkey.com/
-Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa
+Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-This plugin enables a [LaunchKey](https://launchkey.com) user to pair with a WordPress user for authentication.
+This plugin integrates [LaunchKey](https://launchkey.com) so WordPress users have the ability to log in without the need or liability of passwords using their paired smartphone or tablet.
 
-[LaunchKey](https://launchkey.com) is evolving user authentication by eliminating passwords with multi-factor authentication on smartphones and tablets. LaunchKey's free app enables users on websites, applications and other systems to securely and privately authenticate without passwords. For implementers, LaunchKey provides a trustworthy alternative to password-based user authentication while reducing the liability passwords create.
+= What is LaunchKey? =
 
+[LaunchKey](https://launchkey.com) is anonymous multi-factor user authentication without passwords for web and native apps. Instead of traditional password-based authentication, LaunchKey pushes authentication requests to a user’s paired device whereby a user can block or authorize the request with a slide of their finger.
+
+Optional authentication factors like an in-app combo or PIN lock in addition to geofencing (the ability to restrict authentication within a specified geographical boundary) give a user true out-of-band multi-factor authentication.
+
+With a RESTful [API](https://launchkey.com/docs/), LaunchKey’s [authentication flow](https://launchkey.com/docs/api/authentication-flow/) can be integrated in almost any setting. LaunchKey also supports a variety of SDKs in languages like [Python](https://github.com/LaunchKey/launchkey-python), [Ruby](https://github.com/LaunchKey/launchkey-ruby) and [PHP](https://github.com/LaunchKey/launchkey-php) with Objective-C and Java SDKs for [iOS](https://launchkey.com/docs/ios-sdk) and [Android](https://launchkey.com/docs/android-sdk) native apps. For quicker and easier web integrations, LaunchKey offers a client-side [JavaScript](https://launchkey.com/docs/oauth/javascript) implementation for OAuth along with plugins for popular systems like WordPress and Drupal.
 
 == Installation ==
 
-= Plugin =
+Full documentation: https://launchkey.com/docs/plugins/wordpress
 
-1. Upload or install the plugin from the repository.
+1. Download LaunchKey from the [Apple App Store](https://itunes.apple.com/us/app/id609372788?mt=8) or [Google Play](https://play.google.com/store/apps/details?id=com.launchkey) and create a new account or pair your existing LaunchKey account.
 
-2. Click the "Activate" link to the left of the LaunchKey description.
+2. Log into your online [dashboard](https://dashboard.launchkey.com) and create a new developer app by clicking [New app](https://dashboard.launchkey.com/my/newapp) located in the left side navigation.
 
+3. After you've created your new app, copy the App Key and Secret Key (click the "Generate new key" button) from the App Details page and *keep these* for future steps.
 
-= LaunchKey Setup =
+4. While still on the App Details page, check the checkbox next to "OAuth" and enter the domain you've installed this plugin on.
 
-https://launchkey.com/docs/plugins/wordpress
+5. Download, install and activate the LaunchKey WordPress plugin from the WordPress plugin repository.
 
-1. Install LaunchKey on your personal device and create a user/pair and existing account.
+6. Navigate to the LaunchKey settings section (WP Admin > Settings > LaunchKey) and enter the App Key and Secret Key you saved from step 3.
 
-2. Log into https://dashboard.launchkey.com and "Create new app" (https://dashboard.launchkey.com/my/newapp).
+7. Finally, navigate to your Profile Options page by clicking on your username in the top right corner of the WP admin page and click the "Pair" link under the "LaunchKey Options" section. Next, enter your LaunchKey username and authorize the request on your paired device. When you're redirected back to the WP Profile Options page, you're done!
 
-3. After you have created your new App in the dashboard, obtain your "App Key" and generate your "Secret Key".
-*Keep these for future steps.
-
-4. Check the OAuth section and enter the referring domain that will be asking for access.
-
-5. Verify that the LaunchKey plugin is installed and enabled on your WordPress system with the instructions above.
-
-6. Locate the "LaunchKey" settings section and enter your "App Key" and "Secret Key" from step 3.
-
-7. Now you need to pair your LaunchKey user with your WordPress account. There are two ways to accomplish this.
-A) Click on Users > Your Profile and find "LaunchKey Options." Click on the "pair" link and complete the login with LaunchKey.
-After successful LaunchKey login your Users > Profile "LaunchKey Options" will indicate that your accounts are paired and you are done.
-
-B) Log out of the admin section. "Log in with LaunchKey" should be visible on the bottom of the login form.
-Click through and authenticate with LaunchKey.
-On the first success you will be asked to login with your username/password to create the initial user pairing.
-After logging in with your username/password for the last time you are done.
-
-Simply login with LaunchKey from this point forward!
+You will now be able to log in and out of WordPress using LaunchKey.
 
 == Frequently Asked Questions ==
 
 = What does this cost? =
 
-LaunchKey for your device and creating an App for your WordPress installation are both FREE.
+Nothing, it's free!
 
-= What Happens if I lose my Device? =
+= What happens to my password? =
 
-You can always unpair any device at any time at: https://launchkey.com/unpair
+By default, your password will still remain after you pair your LaunchKey account, but you can remove your password by clicking the "Remove WP password" link under "LaunchKey Options" within your Profile Options page in WP Admin.
+
+= What happens if I lose my device? =
+
+Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
+
+= Why does it say 'LaunchKey OAuth' in my Orbit instead of the site I logged in to? =
+
+The LaunchKey WordPress plugin utilizes the popular OAuth 2.0 protocol so when you log in to WordPress, you're doing so through the LaunchKey OAuth service.
 
 == Changelog ==
+
+= 0.2.1 =
+* readme.txt updates. Added screenshots, FAQ, etc.
 
 = 0.2.0 =
 * Pair/Unpair accounts within the User Profile. Allow a User to remove their password and enable LaunchKey only login.
@@ -77,4 +76,11 @@ You can always unpair any device at any time at: https://launchkey.com/unpair
 * Minor updates to readme.txt  
 
 = 0.1.0 =
-* Initial Release 
+* Initial Release
+
+== Screenshots ==
+
+1. 'Log in with LaunchKey' button added to WP-login
+2. WP Admin > Settings > LaunchKey
+3. WP Admin > Profile > LaunchKey Options
+4. Showing successful pair with LaunchKey account
