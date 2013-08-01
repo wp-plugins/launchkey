@@ -38,7 +38,7 @@ class LaunchKey {
     public function check_option($input) {
         if(isset($input['app_key'])) {
             if(is_numeric($input['app_key']) || $input['app_key'] === '') {
-                $app_key = (int) trim($input['app_key']);
+                $app_key = trim($input['app_key']);
                 if(get_option('launchkey_app_key') === FALSE) {
                     add_option('launchkey_app_key', $app_key);
                 } else {
