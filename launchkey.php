@@ -3,7 +3,7 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description:  LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet.
-  Version: 0.2.3
+  Version: 0.2.4
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
@@ -195,7 +195,10 @@ class LaunchKey {
             echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> The LaunchKey request was denied or an issue was detected during authentication. Please try again. </p></div><br>';
         } elseif (isset($_GET['launchkey-ssl-error'])) {
             echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> There was an error trying to request the LaunchKey servers. If this persists you may need to disable SSL verification. </p></div><br>';
+        } elseif (isset($_GET['launchkey-security'])) {
+            echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> There was a security issue detected and you have been logged out for your safety. Log back 0in to ensure a secure session.</p></div><br>';
         }
+
         if (isset($_GET['launchkey-pair'])) {
             echo '<div style="padding:10px;background-color:#eef5ff;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Almost finished!</strong> Log in with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!</p></div><br>';
         } else {
@@ -238,16 +241,28 @@ class LaunchKey {
      */
     public function launchkey_page_init() {
         if(isset($_GET['launchkey-unpair'])) {
-            $user = wp_get_current_user();
-            $this->launchkey_unpair($user->data);
-            wp_logout();
+            if(isset($_GET['launchkey-nonce'])) {
+                if(!wp_verify_nonce($_GET['launchkey-nonce'], 'launchkey-unpair-remove-nonce')){
+                    wp_logout();
+                } else {
+                    $user = wp_get_current_user();
+                    $this->launchkey_unpair($user->data);
+                    wp_logout();
+                }
+            }
         }
 
         if(isset($_GET['launchkey-remove-password'])){
-            $user = wp_get_current_user();
-            if($user->data->ID > 0 ) {
-                wp_update_user(array('ID'=> $user->data->ID, 'user_pass'=>''));
-                wp_logout();
+            if(isset($_GET['launchkey-nonce'])) {
+                if(!wp_verify_nonce($_GET['launchkey-nonce'], 'launchkey-unpair-remove-nonce')){
+                    wp_logout();
+                } else {
+                    $user = wp_get_current_user();
+                    if($user->data->ID > 0 ) {
+                        wp_update_user(array('ID'=> $user->data->ID, 'user_pass'=>''));
+                        wp_logout();
+                    }
+                }
             }
         }
 
@@ -327,8 +342,9 @@ class LaunchKey {
         if(array_key_exists('launchkey_user', $user_meta)) {
             //check if password is set before allowing unpair
             if(!empty($user->data->user_pass)) {
-                $url= admin_url('/profile.php?launchkey-unpair=1');
-                $password_url= admin_url('/profile.php?launchkey-remove-password=1');
+                $nonce = wp_create_nonce('launchkey-unpair-remove-nonce');
+                $url= admin_url('/profile.php?launchkey-unpair=1&launchkey-nonce=' . $nonce);
+                $password_url= admin_url('/profile.php?launchkey-remove-password=1&launchkey-nonce=' . $nonce);
                 echo '<p><em>Note</em>: unpairing a device or removing your WP password will log you out of WordPress.</p><table class="form-table"><tr><th>Status: <em>paired</em></th><td><a href="' . $url . '" title="Click here to unpair your LaunchKey account with this WordPress account">Unpair</a></td></tr><tr><th>WP Password</th><td><a href="' . $password_url . ' " title="Click here to remove your WordPress password">Remove WP password</a></td></tr></table>';
             } else {
                 echo '<table class="form-table"><tr><th>Status: <em>paired</em></th><td></td></tr><tr><th>WP Password</th><td><em>Removed</em>, use form below to add password</td></tr></table>';
@@ -367,7 +383,7 @@ class LaunchKey {
      * @return void
      */
     public function launchkey_unpair($user) {
-        if(is_numeric($user->ID) && $user->ID > 0) {
+        if(is_numeric($user->ID) && $user->ID > 0 && strlen($user->user_pass) > 0) {
             delete_user_meta($user->ID, 'launchkey_user');
         }
     } //end launchkey-pair
