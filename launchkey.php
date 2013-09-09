@@ -3,13 +3,13 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description:  LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet.
-  Version: 0.2.4
+  Version: 0.2.5
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
  */
 
-define('LAUNCHKEY_SSLVERIFY', 1); //Only modify to 0 if SSL certificates are broken on server!
+define('LAUNCHKEY_SSLVERIFY', 1); //Only modify to 0 if SSL certificates are broken on your server!
 
 class LaunchKey {
 
@@ -366,7 +366,7 @@ class LaunchKey {
         // This page will be under "Settings"
         add_options_page('LaunchKey', 'LaunchKey', 'manage_options', 'launchkey-setting-admin',
             array($this, 'create_admin_page'));
-    }
+    } //end launchkey_plugin_page
 
     /**
      * launchkey_section_info - used by launchkey_page_init
@@ -386,8 +386,7 @@ class LaunchKey {
         if(is_numeric($user->ID) && $user->ID > 0 && strlen($user->user_pass) > 0) {
             delete_user_meta($user->ID, 'launchkey_user');
         }
-    } //end launchkey-pair
-
+    } //end launchkey_unpair
 
 } //end class LaunchKey
 
