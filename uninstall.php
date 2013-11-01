@@ -6,8 +6,8 @@
  */
 
 //if uninstall not called from WordPress exit
-if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-    exit();
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+	exit();
 }
 
 //remove launchkey options
@@ -15,4 +15,4 @@ delete_option( 'launchkey_app_key' );
 delete_option( 'launchkey_secret_key' );
 
 //remove user pairings
-delete_metadata( 'user', 0, 'launchkey_user','', true );
+delete_metadata( 'user', 0, 'launchkey_user', '', true );
