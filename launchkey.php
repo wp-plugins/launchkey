@@ -3,7 +3,7 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description:  LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet.
-  Version: 0.3.0
+  Version: 0.3.1
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
@@ -158,9 +158,9 @@ class LaunchKey {
 						if ( is_numeric( $wordpress_user[0]->ID ) && $wordpress_user[0]->ID > 0 ) {
 							//Set Auth Cookie and Redirect to Admin Dashboard
 							wp_set_auth_cookie( $wordpress_user[0]->ID, false );
-							setcookie( 'launchkey_access_token', $launchkey_access_token, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
-							setcookie( 'launchkey_refresh_token', $launchkey_refresh_token, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
-							setcookie( 'launchkey_expires', $launchkey_expires, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
+							setcookie( 'launchkey_access_token', $launchkey_access_token, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
+							setcookie( 'launchkey_refresh_token', $launchkey_refresh_token, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
+							setcookie( 'launchkey_expires', $launchkey_expires, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
 							wp_redirect( admin_url() );
 						}
 						else {
@@ -170,9 +170,9 @@ class LaunchKey {
 					else {
 						//First Time Pair
 						setcookie( 'launchkey_user', $launchkey_user, time() + 300, COOKIEPATH, COOKIE_DOMAIN );
-						setcookie( 'launchkey_access_token', $launchkey_access_token, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
-						setcookie( 'launchkey_refresh_token', $launchkey_refresh_token, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
-						setcookie( 'launchkey_expires', $launchkey_expires, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
+						setcookie( 'launchkey_access_token', $launchkey_access_token, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
+						setcookie( 'launchkey_refresh_token', $launchkey_refresh_token, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
+						setcookie( 'launchkey_expires', $launchkey_expires, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
 
 						if ( ! current_user_can( 'manage_options' ) ) {
 							//not previously logged in
@@ -342,9 +342,9 @@ class LaunchKey {
 						$launchkey_access_token  = $oauth_response['access_token'];
 						$launchkey_refresh_token = $oauth_response['refresh_token'];
 						$launchkey_expires       = current_time( 'timestamp', true ) + $oauth_response['expires_in'];
-						setcookie( 'launchkey_access_token', $launchkey_access_token, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
-						setcookie( 'launchkey_refresh_token', $launchkey_refresh_token, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
-						setcookie( 'launchkey_expires', $launchkey_expires, time() + ( 86400 * 7 ), COOKIEPATH, COOKIE_DOMAIN );
+						setcookie( 'launchkey_access_token', $launchkey_access_token, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
+						setcookie( 'launchkey_refresh_token', $launchkey_refresh_token, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
+						setcookie( 'launchkey_expires', $launchkey_expires, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN );
 					}
 					else {
 						wp_logout();
