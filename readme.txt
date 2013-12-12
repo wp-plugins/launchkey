@@ -3,8 +3,8 @@ Contributors: launchkey
 Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa
 Requires at least: 3.5
-Tested up to: 3.6
-Stable tag: 0.2.5
+Tested up to: 3.8
+Stable tag: 0.3.1
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,11 +54,16 @@ By default, your password will still remain after you pair your LaunchKey accoun
 
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
-= Why does it say 'LaunchKey OAuth' in my Orbit instead of the site I logged in to? =
-
-The LaunchKey WordPress plugin utilizes the popular OAuth 2.0 protocol so when you log in to WordPress, you're doing so through the LaunchKey OAuth service.
-
 == Changelog ==
+
+= 0.3.1 =
+* Refresh Token support for 30 days instead of 7. Note: Default WordPress Sessions last 48 Hours.
+* Updated FAQ
+* WordPress 3.8 support tested and verified.
+
+= 0.3.0 =
+* 3.7 & 3.7.1 support tested and verified.
+* Enhance OAuth Refresh Token support enabling longer sessions.
 
 = 0.2.5 =
 * Secure UNINSTALL added, Deactivation does not do a secure wipe and retains settings and user pairings.
