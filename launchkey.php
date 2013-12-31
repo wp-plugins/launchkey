@@ -3,7 +3,7 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description:  LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet.
-  Version: 0.3.1
+  Version: 0.3.2
   Author: LaunchKey, Inc.
   Author URI: https://launchkey.com
   License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
@@ -21,6 +21,7 @@ class LaunchKey {
 		add_action( 'login_form', array( &$this, 'launchkey_form' ) );
 		add_action( 'wp_login', array( &$this, 'launchkey_pair' ), 1, 2 );
 		add_action( 'wp_logout', array( &$this, 'launchkey_logout' ), 1, 2 );
+		add_shortcode( 'launchkey_login', array( $this, 'launchkey_shortcode') );
 		if ( is_admin() ) {
 			add_action( 'admin_menu', array( $this, 'launchkey_plugin_page' ) );
 			add_action( 'admin_init', array( $this, 'launchkey_page_init' ) );
@@ -113,7 +114,7 @@ class LaunchKey {
 	 */
 	public function launchkey_callback() {
 		if ( isset( $_GET['error'] ) ) {
-			wp_redirect( wp_login_url() . "?launchkey-error=1" );
+			wp_redirect( wp_login_url() . "?launchkey_error=1" );
 		}
 
 		if ( isset( $_GET['code'] ) ) {
@@ -139,7 +140,7 @@ class LaunchKey {
 					$oauth_response = json_decode( $oauth_get['body'], true );
 				}
 				else {
-					wp_redirect( wp_login_url() . "?launchkey-ssl-error=1" );
+					wp_redirect( wp_login_url() . "?launchkey_ssl_error=1" );
 				}
 
 				if ( isset( $oauth_response['user'] ) && isset( $oauth_response['access_token'] ) ) {
@@ -164,7 +165,7 @@ class LaunchKey {
 							wp_redirect( admin_url() );
 						}
 						else {
-							wp_redirect( wp_login_url() . "?launchkey-error=1" );
+							wp_redirect( wp_login_url() . "?launchkey_error=1" );
 						}
 					}
 					else {
@@ -176,24 +177,24 @@ class LaunchKey {
 
 						if ( ! current_user_can( 'manage_options' ) ) {
 							//not previously logged in
-							wp_redirect( wp_login_url() . "?launchkey-pair=1" );
+							wp_redirect( wp_login_url() . "?launchkey_pair=1" );
 						}
 						else {
 							//previously authenticated
-							wp_redirect( admin_url( "profile.php?launchkey-admin-pair=1&updated=1" ) );
+							wp_redirect( admin_url( "profile.php?launchkey_admin_pair=1&updated=1" ) );
 						}
 					}
 				}
 				else {
-					wp_redirect( wp_login_url() . "?launchkey-error=1" );
+					wp_redirect( wp_login_url() . "?launchkey_error=1" );
 				}
 			}
 			else {
-				wp_redirect( wp_login_url() . "?launchkey-error=1" );
+				wp_redirect( wp_login_url() . "?launchkey_error=1" );
 			}
 		}
 		else {
-			wp_redirect( wp_login_url() . "?launchkey-error=1" );
+			wp_redirect( wp_login_url() . "?launchkey_error=1" );
 		}
 	} //end function launchkey_callback
 
@@ -205,23 +206,27 @@ class LaunchKey {
 	 */
 	public function launchkey_form() {
 		$app_key = get_option( 'launchkey_app_key' );
+		//output sanitization
+		if ( ! is_numeric( $app_key ) ) {
+			$app_key = "";
+		}
 
 		$redirect = admin_url( 'admin-ajax.php?action=launchkey-callback' );
-		if ( isset( $_GET['launchkey-error'] ) ) {
+		if ( isset( $_GET['launchkey_error'] ) ) {
 			echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> The LaunchKey request was denied or an issue was detected during authentication. Please try again. </p></div><br>';
 		}
-		elseif ( isset( $_GET['launchkey-ssl-error'] ) ) {
+		elseif ( isset( $_GET['launchkey_ssl_error'] ) ) {
 			echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> There was an error trying to request the LaunchKey servers. If this persists you may need to disable SSL verification. </p></div><br>';
 		}
-		elseif ( isset( $_GET['launchkey-security'] ) ) {
+		elseif ( isset( $_GET['launchkey_security'] ) ) {
 			echo '<div style="padding:10px;background-color:#FFDFDD;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Error!</strong> There was a security issue detected and you have been logged out for your safety. Log back 0in to ensure a secure session.</p></div><br>';
 		}
 
-		if ( isset( $_GET['launchkey-pair'] ) ) {
+		if ( isset( $_GET['launchkey_pair'] ) ) {
 			echo '<div style="padding:10px;background-color:#eef5ff;border:1px solid #ced9ea;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;"><p style="line-height:1.6em;"><strong>Almost finished!</strong> Log in with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!</p></div><br>';
 		}
 		else {
-			$login_url = 'https://oauth.launchkey.com/authorize?client_id=' . $app_key . '&redirect_uri=' . $redirect;
+			$login_url = 'https://oauth.launchkey.com/authorize?client_id=' . $app_key . '&redirect_uri=' . urlencode($redirect);
 			echo '
                 <span onclick="window.location.href=\'' . $login_url . '\'" style="cursor:pointer;display:block;text-align:center;padding:0;background-color:#fcfcfc;border:1px solid #e5e5e5;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;">
                     <span style="display:inline-block;height:55px;line-height:55px;padding:0;margin:0;">
@@ -260,9 +265,9 @@ class LaunchKey {
 	 *
 	 */
 	public function launchkey_page_init() {
-		if ( isset( $_GET['launchkey-unpair'] ) ) {
-			if ( isset( $_GET['launchkey-nonce'] ) ) {
-				if ( ! wp_verify_nonce( $_GET['launchkey-nonce'], 'launchkey-unpair-remove-nonce' ) ) {
+		if ( isset( $_GET['launchkey_unpair'] ) ) {
+			if ( isset( $_GET['launchkey_nonce'] ) ) {
+				if ( ! wp_verify_nonce( $_GET['launchkey_nonce'], 'launchkey_unpair-remove-nonce' ) ) {
 					wp_logout();
 				}
 				else {
@@ -273,9 +278,9 @@ class LaunchKey {
 			}
 		}
 
-		if ( isset( $_GET['launchkey-remove-password'] ) ) {
-			if ( isset( $_GET['launchkey-nonce'] ) ) {
-				if ( ! wp_verify_nonce( $_GET['launchkey-nonce'], 'launchkey-unpair-remove-nonce' ) ) {
+		if ( isset( $_GET['launchkey_remove_password'] ) ) {
+			if ( isset( $_GET['launchkey_nonce'] ) ) {
+				if ( ! wp_verify_nonce( $_GET['launchkey_nonce'], 'launchkey_unpair-remove-nonce' ) ) {
 					wp_logout();
 				}
 				else {
@@ -288,7 +293,7 @@ class LaunchKey {
 			}
 		}
 
-		if ( isset( $_GET['launchkey-admin-pair'] ) ) {
+		if ( isset( $_GET['launchkey_admin_pair'] ) ) {
 			$user = wp_get_current_user();
 			$this->launchkey_pair( "", $user->data );
 		}
@@ -335,7 +340,7 @@ class LaunchKey {
 					}
 					else {
 						wp_logout();
-						wp_redirect( wp_login_url() . "?launchkey-ssl-error=1" );
+						wp_redirect( wp_login_url() . "?launchkey_ssl_error=1" );
 					}
 
 					if ( isset( $oauth_response['refresh_token'] ) && isset( $oauth_response['access_token'] ) ) {
@@ -408,9 +413,9 @@ class LaunchKey {
 		if ( array_key_exists( 'launchkey_user', $user_meta ) ) {
 			//check if password is set before allowing unpair
 			if ( ! empty( $user->data->user_pass ) ) {
-				$nonce        = wp_create_nonce( 'launchkey-unpair-remove-nonce' );
-				$url          = admin_url( '/profile.php?launchkey-unpair=1&launchkey-nonce=' . $nonce );
-				$password_url = admin_url( '/profile.php?launchkey-remove-password=1&launchkey-nonce=' . $nonce );
+				$nonce        = wp_create_nonce( 'launchkey_unpair-remove-nonce' );
+				$url          = admin_url( '/profile.php?launchkey_unpair=1&launchkey_nonce=' . $nonce );
+				$password_url = admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' . $nonce );
 				echo '<p><em>Note</em>: unpairing a device or removing your WP password will log you out of WordPress.</p><table class="form-table"><tr><th>Status: <em>paired</em></th><td><a href="' . $url . '" title="Click here to unpair your LaunchKey account with this WordPress account">Unpair</a></td></tr><tr><th>WP Password</th><td><a href="' . $password_url . ' " title="Click here to remove your WordPress password">Remove WP password</a></td></tr></table>';
 			}
 			else {
@@ -419,7 +424,7 @@ class LaunchKey {
 		}
 		else {
 			$app_key   = get_option( 'launchkey_app_key' );
-			$redirect  = admin_url( 'admin-ajax.php?action=launchkey-callback&launchkey-admin-pair=1' );
+			$redirect  = admin_url( 'admin-ajax.php?action=launchkey-callback&launchkey_admin_pair=1' );
 			$login_url = 'https://oauth.launchkey.com/authorize?client_id=' . $app_key . '&redirect_uri=' . $redirect;
 			echo '<table class="form-table"><tr><th>Status: <em>not paired</em></th><td><a href="' . $login_url . '" title="Click here to pair your LaunchKey account with this WordPress account">Click to pair</a></td></tr></table>';
 		}
@@ -456,6 +461,16 @@ class LaunchKey {
 			delete_user_meta( $user->ID, 'launchkey_user' );
 		}
 	} //end launchkey_unpair
+
+	/**
+	 * launchkey_shortcode - outputs a launchkey login button
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function launchkey_shortcode() {
+		$this->launchkey_form();
+	} //end launchkey_shortcode
 
 } //end class LaunchKey
 
