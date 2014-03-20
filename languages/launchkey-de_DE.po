@@ -1,0 +1,150 @@
+# Copyright (C) 2014 LaunchKey
+# This file is distributed under the same license as the LaunchKey package.
+msgid ""
+msgstr ""
+"Project-Id-Version: LaunchKey 0.4.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/launchkey\n"
+"POT-Creation-Date: 2014-03-19 22:07:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-03-19 15:20-0800\n"
+"Last-Translator: LaunchKey <info@launchkey.com>\n"
+"Language-Team: \n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+
+#: launchkey.php:218
+#: launchkey.php:225
+#: launchkey.php:232
+msgid "Error!"
+msgstr ""
+
+#: launchkey.php:220
+msgid "The LaunchKey request was denied or an issue was detected during authentication. Please try again. "
+msgstr ""
+
+#: launchkey.php:227
+msgid "There was an error trying to request the LaunchKey servers. If this persists you may need to disable SSL verification."
+msgstr ""
+
+#: launchkey.php:234
+msgid "There was a security issue detected and you have been logged out for your safety. Log back 0in to ensure a secure session."
+msgstr ""
+
+#: launchkey.php:240
+msgid "Almost finished!"
+msgstr ""
+
+#: launchkey.php:242
+msgid "Log in with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!"
+msgstr ""
+
+#: launchkey.php:247
+msgid "Log in with LaunchKey"
+msgstr "Mit LaunchKey einloggen"
+
+#: launchkey.php:383
+msgid "Settings"
+msgstr ""
+
+#: launchkey.php:384
+msgid "App Key"
+msgstr ""
+
+#: launchkey.php:385
+msgid "Secret Key"
+msgstr ""
+
+#: launchkey.php:432
+msgid "LaunchKey Options"
+msgstr ""
+
+#: launchkey.php:442
+msgid "Note"
+msgstr ""
+
+#: launchkey.php:444
+msgid "unpairing a device or removing your WP password will log you out of WordPress."
+msgstr ""
+
+#: launchkey.php:446
+#: launchkey.php:463
+#: launchkey.php:480
+msgid "Status"
+msgstr ""
+
+#: launchkey.php:448
+#: launchkey.php:465
+msgid "paired"
+msgstr ""
+
+#: launchkey.php:450
+msgid "Click here to unpair your LaunchKey account with this WordPress account"
+msgstr ""
+
+#: launchkey.php:452
+msgid "Unpair"
+msgstr ""
+
+#: launchkey.php:454
+#: launchkey.php:467
+msgid "WP Password"
+msgstr ""
+
+#: launchkey.php:456
+msgid "Click here to remove your WordPress password"
+msgstr ""
+
+#: launchkey.php:458
+msgid "Remove WP password"
+msgstr ""
+
+#: launchkey.php:469
+msgid "Removed"
+msgstr ""
+
+#: launchkey.php:471
+msgid "use form below to add password"
+msgstr ""
+
+#: launchkey.php:482
+msgid "not paired"
+msgstr ""
+
+#: launchkey.php:484
+msgid "Click here to pair your LaunchKey account with this WordPress account"
+msgstr ""
+
+#: launchkey.php:486
+msgid "Click to pair"
+msgstr ""
+
+#: launchkey.php:506
+msgid "For Setup information please see the"
+msgstr ""
+
+#: launchkey.php:508
+msgid "LaunchKey WordPress Documentation"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "LaunchKey"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/launchkey/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "LaunchKey, Inc."
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://launchkey.com"
+msgstr ""
+
