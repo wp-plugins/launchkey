@@ -1,0 +1,151 @@
+# Copyright (C) 2014 LaunchKey
+# This file is distributed under the same license as the LaunchKey package.
+msgid ""
+msgstr ""
+"Project-Id-Version: LaunchKey 0.4.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/launchkey\n"
+"POT-Creation-Date: 2014-03-19 22:07:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-03-21 18:58-0800\n"
+"Last-Translator: LaunchKey <info@launchkey.com>\n"
+"Language-Team: LaunchKey <info@launchkey.com>\n"
+"X-Generator: Poedit 1.6.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_Hans_CN\n"
+
+#: launchkey.php:218
+#: launchkey.php:225
+#: launchkey.php:232
+msgid "Error!"
+msgstr "错误！"
+
+#: launchkey.php:220
+msgid "The LaunchKey request was denied or an issue was detected during authentication. Please try again. "
+msgstr "LaunchKey的登录请求被拒绝或认证过程中出现问题。请重试"
+
+#: launchkey.php:227
+msgid "There was an error trying to request the LaunchKey servers. If this persists you may need to disable SSL verification."
+msgstr "在连接LaunchKey的认证服务器时出错。如果该问题仍然存在，请尝试关闭SSL安全连接，然后再试。"
+
+#: launchkey.php:234
+msgid "There was a security issue detected and you have been logged out for your safety. Log back 0in to ensure a secure session."
+msgstr "我们在您的账户中发现了一个不安全因素，出于安全考虑，我们已强制下线您的账户。请重新登录并检查安全设置。"
+
+#: launchkey.php:240
+msgid "Almost finished!"
+msgstr "即将完成！"
+
+#: launchkey.php:242
+msgid "Log in with your WordPress username and password for the last time to finish the user pair process. After this you can login exclusively with LaunchKey!"
+msgstr "使用您最新的WordPress博客的用户名和密码登录并完成配对操作，之后您就可以享受LaunchKey的一键登录了！"
+
+#: launchkey.php:247
+msgid "Log in with LaunchKey"
+msgstr "使用LaunchKey登录"
+
+#: launchkey.php:383
+msgid "Settings"
+msgstr "设置"
+
+#: launchkey.php:384
+msgid "App Key"
+msgstr "App Key"
+
+#: launchkey.php:385
+msgid "Secret Key"
+msgstr "Secret Key"
+
+#: launchkey.php:432
+msgid "LaunchKey Options"
+msgstr "LaunchKey 选项"
+
+#: launchkey.php:442
+msgid "Note"
+msgstr "提示"
+
+#: launchkey.php:444
+msgid "unpairing a device or removing your WP password will log you out of WordPress."
+msgstr "取消设备配对或移除您的WordPress会使您登出WordPress。"
+
+#: launchkey.php:446
+#: launchkey.php:463
+#: launchkey.php:480
+msgid "Status"
+msgstr "状态"
+
+#: launchkey.php:448
+#: launchkey.php:465
+msgid "paired"
+msgstr "已配对"
+
+#: launchkey.php:450
+msgid "Click here to unpair your LaunchKey account with this WordPress account"
+msgstr "点击这里断开您WordPress博客账户与LaunchKey账户的连接。"
+
+#: launchkey.php:452
+msgid "Unpair"
+msgstr "取消配对"
+
+#: launchkey.php:454
+#: launchkey.php:467
+msgid "WP Password"
+msgstr "WordPress博客密码"
+
+#: launchkey.php:456
+msgid "Click here to remove your WordPress password"
+msgstr "点击这里移除您的WordPress密码"
+
+#: launchkey.php:458
+msgid "Remove WP password"
+msgstr "移除WordPress密码"
+
+#: launchkey.php:469
+msgid "Removed"
+msgstr "已移除"
+
+#: launchkey.php:471
+msgid "use form below to add password"
+msgstr "使用下面填写的内容来添加密码"
+
+#: launchkey.php:482
+msgid "not paired"
+msgstr "未配对"
+
+#: launchkey.php:484
+msgid "Click here to pair your LaunchKey account with this WordPress account"
+msgstr "点击这里关联您的LaunchKey账户与当前登录的WordPress博客账户"
+
+#: launchkey.php:486
+msgid "Click to pair"
+msgstr "点击这里配对"
+
+#: launchkey.php:506
+msgid "For Setup information please see the"
+msgstr "如需获取设置信息，请参见："
+
+#: launchkey.php:508
+msgid "LaunchKey WordPress Documentation"
+msgstr "LaunchKey WordPress 文档"
+
+#. Plugin Name of the plugin/theme
+msgid "LaunchKey"
+msgstr "LaunchKey"
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/launchkey/"
+msgstr "https://wordpress.org/plugins/launchkey/"
+
+#. Description of the plugin/theme
+msgid "LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet."
+msgstr "LaunchKey可使您无需记住繁杂的博客登录密码，使用智能手机或平板一键登录！"
+
+#. Author of the plugin/theme
+msgid "LaunchKey, Inc."
+msgstr "LaunchKey, Inc."
+
+#. Author URI of the plugin/theme
+msgid "https://launchkey.com"
+msgstr "https://launchkey.com"
+
