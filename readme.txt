@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa
 Requires at least: 3.5
 Tested up to: 3.8.1
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,8 +56,11 @@ Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
 
+= 0.4.1 =
+* Our first user submitted language has been added: Chinese (WPLANG: zh_CN). Thanks @DeamworkTec! Please contact us if you would like to help translate a new language or update an existing one. 
+
 = 0.4.0 =
-* Internationalization support, help us translate!
+* Internationalization and Localization support.
 * Shortcode styling enhancements 
 
 = 0.3.2 =
