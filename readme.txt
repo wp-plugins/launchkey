@@ -3,22 +3,42 @@ Contributors: launchkey
 Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa
 Requires at least: 3.5
-Tested up to: 3.8.1
-Stable tag: 0.4.1
-License: GPLv2 Copyright (c) 2013 LaunchKey, Inc.
+Tested up to: 3.9.1
+Stable tag: 0.4.2
+License: GPLv2 Copyright (c) 2014 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-This plugin integrates [LaunchKey](https://launchkey.com) so WordPress users have the ability to log in without the need or liability of passwords using their paired smartphone or tablet.
+Stop using insecure passwords! With [LaunchKey](https://launchkey.com), you can securely log in to WordPress using your mobile phone or tablet.
+
+NEW BIOMETRIC AUTHENTICATION AVAILABLE!!! LaunchKey is the first WordPress plugin that allows you to protect your WordPress site with biometric face scan and fingerprint scan!!
 
 = What is LaunchKey? =
 
-[LaunchKey](https://launchkey.com) is anonymous multi-factor user authentication without passwords for web and native apps. Instead of traditional password-based authentication, LaunchKey pushes authentication requests to a user’s paired device whereby a user can block or authorize the request with a slide of their finger.
+[LaunchKey](https://launchkey.com) is the mobile authentication platform for the post-password era. With LaunchKey, an individual’s unique mobile phone or tablet is transformed in to a smart key capable of authenticating its owner to any online or offline application, including WordPress!  
 
-Optional authentication factors like an in-app combo or PIN lock in addition to geofencing (the ability to restrict authentication within a specified geographical boundary) give a user true out-of-band multi-factor authentication.
 
-With a RESTful [API](https://launchkey.com/docs/), LaunchKey’s [authentication flow](https://launchkey.com/docs/api/authentication-flow/) can be integrated in almost any setting. LaunchKey also supports a variety of SDKs in languages like [Python](https://github.com/LaunchKey/launchkey-python), [Ruby](https://github.com/LaunchKey/launchkey-ruby) and [PHP](https://github.com/LaunchKey/launchkey-php) with Objective-C and Java SDKs for [iOS](https://launchkey.com/docs/ios-sdk) and [Android](https://launchkey.com/docs/android-sdk) native apps. For quicker and easier web integrations, LaunchKey offers a client-side [JavaScript](https://launchkey.com/docs/oauth/javascript) implementation for OAuth along with plugins for popular systems like WordPress and Drupal.
+= How does LaunchKey work? =
+
+Instead of logging in with passwords, LaunchKey forwards a login request to your paired mobile device where you can authorize the request through the free LaunchKey mobile app (available on iOS, Android, and Windows Phone). 
+
+= How does LaunchKey provide more security? =
+
+Not only does LaunchKey eliminate the liability of utilizing passwords in the first place, it provides true multi-factor authentication through a variety of auth factors including biometric face scan and fingerprint scan, geofencing, in-app combination and PIN locks, and more! Furthermore, by shifting the layer of authentication from your WordPress site to your mobile device, you eliminate many common attack vectors prevalent in password-based authentication.
+
+= How do I know LaunchKey is secure? =
+
+At LaunchKey, security and privacy are paramount. As such, we architected LaunchKey to be an anonymous service. We don’t collect personally identifying information on our users, and any personal information used to verify authentication factors (e.g. biometric data, geographic coordinates, etc.) are stored securely on your device, not on LaunchKey servers. As a company, we're not even capable of authenticating or logging in on behalf of our users. Additionally, the entire LaunchKey platform has been independently audited for security by Veracode, Praetorian Labs, and our active community of “white hat” security researchers.
+
+= What if I lose my phone? = 
+
+A paired device can be remotely unpaired through this online [form](https://launchkey.com/unpair). If you have another paired device with the same LaunchKey account, you may also unpair your lost device through the control panel of the device you still have possession of.
+
+= Where can I find out more? =
+
+End users may read our detailed mobile app guide while developers can view our extensive online documentation.
+
 
 == Installation ==
 
@@ -55,6 +75,10 @@ By default, your password will still remain after you pair your LaunchKey accoun
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
+
+= 0.4.2 =
+* Update assets and readme
+* Confirm support up to and including 3.9.1
 
 = 0.4.1 =
 * Our first user submitted language has been added: Chinese (WPLANG: zh_CN). Thanks @DeamworkTec! Please contact us if you would like to help translate a new language or update an existing one. 
