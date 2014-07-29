@@ -1,7 +1,7 @@
 === LaunchKey ===
 Contributors: launchkey 
 Donate link: https://launchkey.com/
-Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa
+Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa, biometry, biometric, face scan, facial scan, selfie, fingerprint, finger scan
 Requires at least: 3.5
 Tested up to: 3.9.1
 Stable tag: 0.4.2
