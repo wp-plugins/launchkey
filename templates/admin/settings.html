@@ -1,0 +1,522 @@
+<noscript><p style="color:red;">You need Javascript enabled to view this page.</p></noscript>
+<!--[if IE]><p style="color:red;">You need a <a target="_blank" href="http://browsehappy.com/">modern browser</a> for this plugin to work properly.</p><![endif]-->
+
+<script id="lk-error-template" type="text/x-custom-template">
+<div class="error notice is-dismissible lk-error">
+    <p>%%%</p>
+    <button type="button" class="notice-dismiss">
+        <span class="screen-reader-text">Dismiss this notice.</span>
+    </button>
+</div>
+</script>
+
+<script id="lk-notice-template" type="text/x-custom-template">
+<div class="updated notice is-dismissible lk-error">
+    <p>%%%</p>
+    <button type="button" class="notice-dismiss">
+        <span class="screen-reader-text">Dismiss this notice.</span>
+    </button>
+</div>
+</script>
+
+<!-- Header -->
+<div class="launchkey-header lk-content lk-fouc">
+    <div class="lk-inline-block" id="launchkey-wizard-header">
+        <h2>LaunchKey Setup Wizard</h2>
+    </div>
+    <div class="lk-inline-block" id="launchkey-settings-header">
+        <h2>LaunchKey Settings  </h2>
+        <a data-view-link="wizard-1" class="lk-blue-btn lk-margin-left-indent" href="#wizard-1">Restart Setup Wizard</a>
+    </div>
+
+    <div class="useful-links">
+        <p>Useful LaunchKey links: </p>
+        <a target="_blank" href="https://dashboard.launchkey.com/login">Dashboard</a>
+        <a target="_blank" href="https://docs.launchkey.com/">Documentation</a>
+        <a target="_blank" href="https://docs.launchkey.com/user/mobile-app-guide/index.html">Mobile User Guide</a>
+        <a target="_blank" href="https://launchkey.com/support">Support</a>
+    </div>
+</div>
+
+<!-- 1st View of the Wizard -->
+<div data-view="wizard-1" class="lk-center max-width-500">
+    <div class="lk-wizard-logo"></div>
+    <h2 class="launchkey-intro-headline">Hi there. Let's get started.</h2>
+    <p class="light-grey-large">You’re just minutes away from eliminating the hassle and risk of passwords from WordPress. This setup wizard will guide you through the setup and configuration process with LaunchKey.</p>
+    <p class="light-grey-large"><em>When you're ready to begin, click the button below.</em></p>
+    <a class="lk-big-white-btn" href="#wizard-2" data-view-breadcrumb="1" data-view-link="wizard-2">Begin Setup</a>
+</div>
+
+<!-- 2nd View of the Wizard -->
+<div data-view="wizard-2" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a class="active">Pair device with LaunchKey</a></li>
+    </ul>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">First, let’s pair your mobile device with LaunchKey</h2>
+            <p class="light-grey-large">Follow these steps:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> Download the free LaunchKey mobile app on iOS, Android, or Windows Phone. 
+            <a data-accordion="2-1" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="2-1">
+            <p>LaunchKey Mobile is a free app from LaunchKey that will allow you to receive authentication requests from WordPress and other LaunchKey-secured applications on your smartphone or tablet. Download LaunchKey in the <a target="_blank" href="http://georiot.co/launchkey">Apple App Store</a>, <a target="_blank" href="https://play.google.com/store/apps/details?id=com.launchkey">Google Play</a>, or <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/launchkey/ebc2472f-d8eb-4c1b-b54e-fbb65257be26">Windows Store</a>.</p>
+        </div>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> Open the app and tap the <em>Create Account</em> button and complete the form
+            <a data-accordion="2-2" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="2-2">
+            <p>After you’ve downloaded LaunchKey Mobile, open the app and tap the Create Account button in the lower left-hand corner of the screen and complete the form. <strong>Only one pairing method (email or SMS) is required.</strong></p>
+            <p class="lk-indent"><strong>Username</strong> - Choose a LaunchKey username (min. 6 characters) that you’re comfortable memorizing</p>
+            <p class="lk-indent"><strong>Device Name</strong> - Name your device anything you’ll recognize</p>
+            <p class="lk-indent"><strong>Email Address</strong> - Enter your email address to receive a confirmation email to complete pairing</p>
+            <p class="lk-indent"><strong>Phone Number</strong> - <em>U.S. only.</em> Enter your phone number to receive a confirmation SMS to complete pairing</p>
+        </div>
+        <p class="step-headline">
+            <span class="lk-big-number">3.</span> Respond to the LaunchKey pair confirmation sent to you via email, SMS, or both.
+            <a data-accordion="2-3" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="2-3">
+            <p>To complete the account creation process and successfully pair your mobile device with LaunchKey, a confirmation request will be emailed or texted to you with very brief instructions to confirm and finish the LaunchKey device setup process. <strong>If you provided both an email address and phone number, you will be sent an email AND a text message.</strong> Follow the very brief instructions in the confirmation request(s) to finish pairing your device.</p>
+        </div>
+        <p class="step-headline">
+            <span class="lk-big-number">4.</span> When the pending screen within LaunchKey Mobile disappears, your mobile device has been paired and you’re ready to move to the next step
+            <a data-accordion="2-4" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="2-4">
+            <p>After you’ve responded to the confirmation request that was emailed or texted to you (or both), LaunchKey will push a notification to your mobile device informing it that setup is complete. When your device receives this notification, the pending screen within LaunchKey Mobile should disappear.</p>
+            <p>If you completed the confirmation instructions, but a push notification wasn’t received and/or the pending screen is still visible in LaunchKey Mobile, tap the refresh button in the top right of the pending screen to manually check your status. If you tap refresh and the pending screen is still there, start the account creation process over again, and consider utilizing an alternate pairing confirmation method.</p>
+        </div>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="wizard-3" class="lk-next" href="#wizard-3">Next</a>
+    </div>
+</div>
+
+<!-- 3rd View of Wizard -->
+<div data-view="wizard-3" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a class="active">Log in to Dashboard</a></li>
+    </ul>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Next, log in to LaunchKey Dashboard</h2>
+            <p class="light-grey-large">Follow these steps:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> In a new browser tab or window, navigate to <a target="_blank" href="https://dashboard.launchkey.com">https://dashboard.launchkey.com</a>
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> In the input field, enter the LaunchKey username you chose previously and press enter
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">3.</span> An authorization request will be pushed to your mobile device. Approve the request within LaunchKey Mobile by sliding the LaunchKey icon up
+            <a data-accordion="3-3" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="3-3">
+            <p>With LaunchKey, instead of providing a website or application with a password for login, an authentication request is pushed to your mobile device for you to authorize through the LaunchKey mobile app. Once you authenticate and authorize the request through LaunchKey Mobile, you will be automatically logged in. <strong>You will use LaunchKey Mobile to log in to WordPress in the same manner.</strong></p>
+            <div class="lk-login-graphic"></div>
+            <p>For more details on how to use receive &amp; respond to requests using LaunchKey Mobile, visit: <a target="_blank" href="https://docs.launchkey.com/user/mobile-app-guide/launch-requests.html">https://docs.launchkey.com/user/mobile-app-guide/launch-requests.html</a></p>
+        </div>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="wizard-4" class="lk-next" href="#wizard-4">Next</a>
+    </div>
+</div>
+
+<!-- 4th View of Wizard -->
+<div data-view="wizard-4" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a class="active">Choose Authenticator</a></li>
+    </ul>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Where do you want users to receive your WP login requests?</h2>
+            <p class="light-grey-large">With LaunchKey, you can choose whether you want your WordPress users to receive and respond to login requests through the <a target="_blank" href="https://docs.launchkey.com/user/mobile-app-guide/index.html">free LaunchKey mobile app</a> or through your own mobile app by utilizing our <a target="_blank" href="https://docs.launchkey.com/developer/white-label/index.html">White Label SDK</a>. Note: LaunchKey White Label will require additional mobile development work, while utilizing the free LaunchKey mobile app will not.</p>
+            <p class="light-grey-large lk-margin-top">Select the Authenticator you want to use:</p>
+        </div>
+        <div class="lk-two-panel">
+            <p class="lk-blue"><em>Recommended</em></p>
+            <p class="lk-headline lk-left">The LaunchKey mobile app</p>
+            <p class="lk-left light-grey-large lk-copy-fixed-height">Use this option for the quickest and easiest implementation. No mobile integration or additional development work required.</p>
+            <a class="lk-blue-btn" data-view-link="wizard-5" onclick="launchkey_wizard_config.implementation_type = 'native'" href="#wizard-5">Use LaunchKey Mobile</a>
+        </div>
+        <div class="lk-two-panel">
+            <p class="lk-blue"><em>Advanced</em></p>
+            <p class="lk-headline lk-left">Your own mobile app</p>
+            <p class="lk-left light-grey-large lk-copy-fixed-height">Additional mobile app development required to integrate the White Label SDK. Must have your own iOS, Android, or Windows Phone mobile app(s).</p>
+            <a class="lk-blue-btn" data-view-link="wizard-wl-5" onclick="launchkey_wizard_config.implementation_type = 'white-label'" href="#wizard-wl-5">Use White Label SDK</a>
+        </div>
+    </div>
+</div>
+
+<!-- 5th View of Wizard (Standard) -->
+<div data-view="wizard-5" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Choose Authenticator</a></li>
+        <li><a class="active">Create Rocket</a></li>
+    </ul>
+    <a data-view-link="wizard-4" class="lk-back-link" href="#wizard-4">&lt; Choose a different option</a>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Okay, let’s create a Rocket for your WordPress site</h2>
+            <p class="light-grey-large">To ensure your WordPress site can communicate with the LaunchKey service, you need to create a LaunchKey Rocket within Dashboard. A Rocket represents your WordPress site within LaunchKey, and it’s where you can manage and configure the way your WordPress site interacts with the LaunchKey API and users, as well as where you’ll find keys and other LaunchKey data.</p>
+            <p class="light-grey-large lk-margin-top">Follow these steps:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> Create a new Rocket by navigating to <a target="_blank" href="https://dashboard.launchkey.com/my/newapp">https://dashboard.launchkey.com/my/newapp</a>
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> Choose a name, description, and avatar that represents this WordPress site.
+            <a data-accordion="5-2" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="5-2">
+            <p>This information will be visible to LaunchKey users anytime they receive a login request from your WordPress site. You can change these details at anytime.</p>
+            <p class="lk-indent"><strong>Name</strong> - Enter a unique name that reflects the name or URL of this WordPress site</p>
+            <p class="lk-indent"><strong>Description</strong> - (<em>optional</em>) Enter a brief description</p>
+            <p class="lk-indent"><strong>Avatar</strong> - (<em>optional</em>) Upload a GIF, JPG, or PNG image that represents your WordPress site or branding</p>
+        </div>
+        <p class="step-headline">
+            <span class="lk-big-number">3.</span> Submit the form by clicking the <em>Create Rocket</em> button.
+            <a data-accordion="5-3" class="lk-details">Details</a>
+        </p>
+        <div class="lk-accordion-container" data-accordion-content="5-3">
+            <p>Read and agree to the Developer Terms of Service, and then click Create Rocket to submit the form.</p>
+        </div>
+    </div>
+    <div class="lk-center">
+        <p class="light-grey-large">Once you've completed and submitted the form, click the <em>Next</em> button to move on.</p>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="wizard-6" class="lk-next" href="#wizard-6">Next</a>
+    </div>
+</div>
+
+<!-- 5th View of Wizard (Whitelabel) -->
+<div data-view="wizard-wl-5" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Choose Authenticator</a></li>
+        <li><a class="active">Create White Label Rocket</a></li>
+    </ul>
+    <div class="lk-caution-box">
+        <p class="lk-notice-headline">NOTICE</p>
+        <p class="lk-notice-copy">You have chosen to utilize LaunchKey White Label. In addition to completing the steps on this page, you will need to follow the <a target="_blank" href="https://docs.launchkey.com/developer/white-label/index.html">LaunchKey White Label Developer Docs</a> to properly embed and configure the White Label SDK within your iOS, Android, or Windows Phone mobile app(s).</p>
+        <p class="lk-notice-copy">For an easier setup process that doesn’t require mobile app development, switch to the <a data-view-link="wizard-4" href="#wizard-4">standard integration</a> otherwise proceed with the instructions below.</p>
+    </div>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Okay, first let’s create an Organization in Dashboard</h2>
+            <p class="light-grey-large">You’ve selected to implement the <a href="https://docs.launchkey.com/developer/white-label/index.html" target="_blank">LaunchKey White Label SDK</a> within your own mobile app so that your WordPress users will receive login requests within a mobile app you own rather than the free LaunchKey mobile app. <a data-view-link="wizard-4" href="#wizard-4">Click here</a> to change your choice. To proceed, create an Organization in Dashboard.</p>
+            <p class="light-grey-large lk-margin-top">Follow these steps:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> Create a new Organization here: <a target="_blank" href="https://dashboard.launchkey.com/organizations/create">https://dashboard.launchkey.com/organizations/create</a>
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> In the form, choose an Organization name, description (<em>optional</em>), and avatar (<em>optional</em>).
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">3.</span>  Enter your name and email address in the <em>Admin Information</em> section, and click the <em>Create Organization</em> button to submit the form.
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">4.</span>  Check your inbox for a confirmation email and click the link it contains.
+        </p>
+    </div>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Now let’s create a White Label Group</h2>
+            <p class="light-grey-large">Once you’ve clicked the link in your Create Organization confirmation email, you will be forwarded to your Organization Details page within Dashboard. Now we’ll need to create a White Label Group.</p>
+            <p class="light-grey-large lk-margin-top">Follow these steps:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> From your Organization Details page, click the <em>New White Label Group</em> button within the <em>White Label Groups</em> subsection.
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> In the form, enter a name to identify your White Label Group (name is private), and click the <em>Create</em> button.
+        </p>
+    </div>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Lastly, create a White Label Rocket for your WordPress site</h2>
+            <p class="light-grey-large">To ensure your WordPress site can communicate with the LaunchKey service and your mobile app(s) containing the LaunchKey White Label SDK, you need to create a Rocket within Dashboard. A Rocket represents your WordPress site within LaunchKey, and it’s where you can manage and configure the way your WordPress site interacts with the LaunchKey API and users.</p>
+            <p class="light-grey-large lk-margin-top">Follow these steps:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> From your new White Label Group details page, click the <em>New Rocket</em> button in the <em>Rockets</em> subsection.
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> Choose a name, description, and avatar that you want users to see when they receive a login request from your WordPress site.
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">3.</span> Read and agree to the <em>Developer Terms of Service</em>, and then click the <em>Create Rocket</em> button.
+        </p>
+    </div>
+    <div class="lk-center">
+        <p class="light-grey-large">Once you've completed and submitted the form, click the <em>Next</em> button to move on.</p>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="wizard-6" class="lk-next" href="#wizard-6">Next</a>
+    </div>
+</div>
+
+<!-- 6th View of Wizard -->
+<div data-view="wizard-6" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Choose Authenticator</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Create Rocket</a></li>
+        <li><a class="active">Add Callback URL</a></li>
+    </ul>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Add this Callback URL to your Rocket</h2>
+            <p class="light-grey-large"><a data-accordion="6-1" data-accordion-hide-trigger="6-1" data-accordion-hide="6-1">View more information</a></p>
+            <p class="light-grey-large" data-accordion-content="6-1">Once a login authorization request has been sent to your user, your WordPress site will leverage a technology called Server Side Events to wait for an authorization response from your user. To do this, your Rocket will post resonses to your WordPress site using the Callback URL below. Add this URL to the configuration options of your Rocket. <a data-accordion="6-1" data-accordion-hide-trigger="6-1">View less</a></p>
+            <p class="light-grey-bold lk-margin-top">Your Callback URL is:</p>
+            <p class="lk-code-snippet">%%%callback_url%%%</p>
+
+            <p class="light-grey-large lk-margin-top">Follow these instructions:</p>
+        </div>
+    </div>
+    <div class="lk-white-panel">
+        <p class="step-headline">
+            <span class="lk-big-number">1.</span> If you’re not already on the details page of your new Rocket, click on the menu icon within Dashboard, select <em>Rockets</em>, and click on the name of the Rocket you just created.
+        </p>
+        <p class="step-headline">
+            <span class="lk-big-number">2.</span> In the <em>General</em> tab within the <em>Configuration</em> section, copy and paste the URL above into the input next to <em>Callback URL</em>.
+        </p>
+    </div>
+    <div class="lk-center">
+        <div class="lk-margin-top">
+            <p class="light-grey-large">Changes to your Rocket are saved automatically. Click Next to proceed.</p>
+        </div>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="wizard-7" class="lk-next" href="#wizard-7">Next</a>
+    </div>
+</div>
+
+<!-- 7th View of Wizard -->
+<div data-view="wizard-7" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Choose Authenticator</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Create Rocket</a></li>
+        <li><a data-view-link="wizard-6" href="#wizard-6">Add Callback URL</a></li>
+        <li><a class="active">Configure Keys</a></li>
+    </ul>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Almost done! Configure this plugin with keys from your Rocket</h2>
+            <p class="light-grey-large lk-margin-top">Follow these steps:</p>
+        </div>
+    </div>
+    
+    <div class="lk-white-panel">
+        <form method="post" id="lk-wizard-keys-form" enctype="multipart/form-data" autocomplete="off">
+            <p class="step-headline">
+                <span class="lk-big-number">1.</span> Click on the <em>Keys</em> tab within your Rocket details page inside Dashboard.
+            </p>
+            <p class="step-headline">
+                <span class="lk-big-number">2.</span> Copy the value next to <em><strong>Rocket</strong> Key</em> and paste it in the corresponding input field below:
+            </p>
+            <label class="lk-label" for="wizard_keys_rocket_key">Rocket Key</label>
+            <input class="lk-text-input lk-margin-left-indent" id="wizard_keys_rocket_key" type="text" name="rocket_key" autocomplete="off" placeholder="e.g. 1234567890" maxlength="10" />
+            <p class="step-headline">
+                <span class="lk-big-number">3.</span> Under the <em>Encryption Keys</em> section, click the <em>New <strong>Secret</strong> Key</em> button and select the <em>View &amp; copy new key</em> option from the dropdown menu. A new Secret Key will be generated and displayed in place of the button. Copy this new key and paste it in the corresponding input field below:
+            </p>
+            <label class="lk-label" for="wizard_keys_secret_key">Secret Key</label>
+            <input class="lk-text-input lk-margin-left-indent" id="wizard_keys_secret_key" type="text" name="secret_key" autocomplete="off" placeholder="e.g. sb0r7v716ydkqn4y727g4ado26w6oc9r" maxlength="32" />
+            <p class="step-headline">
+                <span class="lk-big-number">4.</span> Also under the Encryption Keys section, click the New Private Key button and select the Download new key option from the dropdown menu. Your new Private Key will be saved to your computer in a file called LaunchKey.key. Upload the LaunchKey.key file here by clicking the button below:
+            </p>
+            <label class="lk-label" for="wizard_keys_private_key">Private Key</label>
+            <input class="lk-margin-left-indent" type="file" id="wizard_keys_private_key" name="private_key">
+            <!-- Hidden ssl_verify -->
+            <div class="launchkey-hide">
+                <input type="checkbox" id="ssl_verify" name="ssl_verify" checked="checked">
+            </div>
+        </form>
+        <div class="lk-white-label-only">
+            <p class="step-headline">
+                <span class="lk-big-number">5.</span> The display name setting allows you to set the name that will be used to refer to the mobile app that will be used to pair and authenticate users with this WordPress site. It should be similar if not the same as the name of your White Label app.
+            </p>
+            <label class="lk-label" for="wl_display_name">Display Name</label>
+            <input class="lk-text-input lk-margin-left-indent" autocomplete="off" type="text" id="wl_display_name" name="app_display_name" placeholder="LaunchKey">
+        </div>
+    </div>
+    
+    <div class="lk-center">
+        <div class="lk-margin-top">
+            <p class="light-grey-large">After you’ve supplied the <strong>3 keys</strong> needed above, click the <em>Next</em> button to save these keys and proceed.</p>
+        </div>
+    </div>
+    <div class="lk-content">
+        <a data-launchkey-submit="lk-wizard-keys-form" class="lk-next">Next <div class="launchkey-hide launchkey-spinner"></div></a>
+    </div>
+</div>
+
+<!-- 8th View of Wizard -->
+<div data-view="wizard-8" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Choose Authenticator</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Create Rocket</a></li>
+        <li><a data-view-link="wizard-6" href="#wizard-6">Add Callback URL</a></li>
+        <li><a data-view-link="wizard-7" href="#wizard-7">Configure Keys</a></li>
+        <li><a class="active">Verify Configuration</a></li>
+    </ul>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Finally, let’s verify everything is working</h2>
+            <p class="light-grey-large lk-margin-top">In order to verify that your WordPress site can now initiate authorization requests using LaunchKey, initiate a request by entering your <strong>LaunchKey username</strong> below, click <em>Verify</em>, and authorize the request on your mobile device. An authorization request will be pushed to your mobile device containing the Rocket name, description, and avatar you chose earlier.</p>
+        </div>
+    </div>
+    <div class="lk-verify-form">
+
+        <!-- Verify standard only elements -->
+        <form id="verify-native-form" class="lk-standard-only">
+            <input id="username" type="text" class="lk-text-input" placeholder="LaunchKey Username" />
+            <input id="verify-native-button" type="submit" class="lk-blue-btn" value="Verify"/>
+        </form>
+
+        <!-- Verify WL only elements -->
+        <div class="lk-white-label-only">
+            <p class="lk-no-margin">Pair your device.</p>
+            <a class="lk-blue-btn lk-margin-top" id="lk-wl-pair">Pair</a>
+            <p id="pairing-manual-code"></p>
+            <img id="pairing-qr-code">
+            <div id="lk-wl-pair-step-verify" class="launchkey-hide">
+                <a class="lk-blue-btn" id="verify-white-label">Verify</a>
+                <p>Check your mobile device for a Launch Request. If you do not receive the push notification, you may need to refresh the Orbit screen in the app to get the request or manually authenticate for a White Label app.</p>
+            </div>
+        </div>
+
+        <!-- Verify common elements -->
+        <div id="verify-processing" class="launchkey-hide lk-margin-top">
+            <p class="lk-inline-block lk-no-margin">Processing</p>
+            <div class="launchkey-spinner"></div>
+        </div>
+        <div id="verify-success" class="launchkey-hide lk-margin-top">
+            <p class="lk-no-margin">Congratulations! You have successfully configured the LaunchKey WordPress Plugin!</p>
+        </div>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="wizard-9" class="lk-next" style="display:none;" href="#wizard-9">Next</a>
+    </div>
+</div>
+
+<!-- 9th and Final View of Wizard -->
+<div data-view="wizard-9" class="lk-content">
+    <ul class="lk-breadcrumb">
+        <li><a data-view-link="wizard-2" href="#wizard-2">Pair device with LaunchKey</a></li>
+        <li><a data-view-link="wizard-3" href="#wizard-3">Log in to Dashboard</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Choose Authenticator</a></li>
+        <li><a data-view-link="wizard-4" href="#wizard-4">Create Rocket</a></li>
+        <li><a data-view-link="wizard-6" href="#wizard-6">Add Callback URL</a></li>
+        <li><a data-view-link="wizard-7" href="#wizard-7">Configure Keys</a></li>
+        <li><a data-view-link="wizard-8" href="#wizard-8">Verify Configuration</a></li>
+        <li><a class="green">Finished!</a></li>
+    </ul>
+    <div class="lk-success-check"></div>
+    <div class="lk-center">
+        <div class="lk-headline-container">
+            <h2 class="launchkey-intro-headline">Finished!</h2>
+            <p class="light-grey-large">Congrats, LaunchKey has been configured with your WordPress site. <strong>To log in to WordPress with LaunchKey, simply submit the login form with your standard WordPress username, but leave the password field blank.</strong> Other users of this WordPress site may activate LaunchKey by enabling LaunchKey within their WordPress profile section. Please notify them accordingly.</p>
+            <p class="light-grey-large">Click the <em>Finish</em> button below to proceed to the standard settings and configuration page.</p>
+        </div>
+    </div>
+    <div class="lk-content">
+        <a data-view-link="settings" class="lk-next" href="#settings">Finish</a>
+    </div>
+</div>
+
+<!-- Settings View -->
+<div data-view="settings" class="lk-content">
+    <form id="lk-settings-keys-form">
+        <h2 class="lk-bold">Configuration Details</h2>
+        <p>These settings should match the information found within your Rocket inside <a target="_blank" href="https://dashboard.launchkey.com/">LaunchKey Dashboard</a></p>
+        <div class="lk-setting">
+            <label for="settings_form_rocket_key">Rocket Key</label>
+            <div class="lk-inline-block">
+                <input type="text" name="rocket_key" id="settings_form_rocket_key" value="%%%rocket_key%%%" placeholder="e.g. 1234567890" />
+                <button data-accordion="settings-1" class="lk-details">What is this?</button>
+                <p class="lk-setting-help" data-accordion-content="settings-1">10 digit Rocket Key for your LaunchKey Rocket</p>
+            </div>
+        </div>
+        <div class="lk-setting">
+            <label for="settings_form_secret_key">Secret Key</label>
+            <div class="lk-inline-block">
+                <input type="text" name="secret_key" id="settings_form_secret_key" placeholder="e.g. 93dksd9fm3dfskfg9sdo3kf" />
+                <button data-accordion="settings-2" class="lk-details">What is this?</button>
+                <p class="lk-setting-help">Current secret key hidden for security</p>
+                <p class="lk-setting-help" data-accordion-content="settings-2">32 character alpha-numeric Secret Key for your LaunchKey Rocket</p>
+            </div>
+        </div>
+        <div class="lk-setting">
+            <label for="settings_form_private_key">Private Key</label>
+            <div class="lk-inline-block">
+                <input type="file" name="private_key" id="settings_form_private_key" />
+                <button data-accordion="settings-3" class="lk-details">What is this?</button>
+                <p class="lk-setting-help">Current private key hidden for security</p>
+                <p class="lk-setting-help" data-accordion-content="settings-3">10 digit Rocket Key for your LaunchKey Rocket</p>
+            </div>
+        </div>
+        <div class="lk-setting">
+            <label>Callback URL</label>
+            <p class="lk-inline-block">%%%callback_url%%%</p>
+        </div>
+        <a class="lk-blue-btn" data-launchkey-submit="lk-settings-keys-form">Save Changes <div class="launchkey-hide launchkey-spinner"></div></a>
+
+        <h2 class="lk-bold">Advanced Settings</h2>
+        <p>Only modify these settings if you want to implement a non-standard WordPress integration.</p>
+        <div class="lk-setting">
+            <label for="ssl_verify">SSL Verify</label>
+            <div class="lk-inline-block">
+                <input class="lk-inline-block" type="checkbox" id="ssl_verify" name="ssl_verify" %%%ssl_verify_checked%%%>
+                <p class="lk-inline-block">Uncheck this box to disable SSL certificate verification</p>
+                <p class="lk-warning lk-padding-top"><em>
+                    <strong>Warning:</strong> turning off SSL verification may make it impossible to log in with Launchkey.<br/>
+                    Use this as a last resort due to SSL errors communicating with LaunchKey
+                </em></p>
+            </div>
+        </div>
+    </form>
+    <!-- WL Only Option -->
+    <div class="lk-white-label-only">
+        <div class="lk-setting">
+            <label for="wl_display_settings">Display Name</label>
+            <div class="lk-inline-block">
+                <input type="text" id="wl_display_settings" name="app_display_name" placeholder="LaunchKey" value="%%%app_display_name%%%">
+                <button data-accordion="wl_display_settings" class="lk-details">What is this?</button>
+                <p class="lk-setting-help" data-accordion-content="wl_display_settings">The display name setting allows you to set the name that will be used to refer to the mobile app that will be used to pair and authenticate users with this WordPress site. It should be similar if not the same as the name of your White Label app.</p>
+            </div>
+        </div>
+    </div>
+    <a class="lk-blue-btn" data-launchkey-submit="lk-settings-keys-form">Save Changes <div class="launchkey-hide launchkey-spinner"></div></a>
+</div>

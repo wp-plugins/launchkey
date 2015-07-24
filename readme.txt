@@ -3,21 +3,22 @@ Contributors: launchkey
 Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa, biometry, biometric, face scan, facial scan, selfie, fingerprint, finger scan
 Requires at least: 3.5
-Tested up to: 4.0 
+Tested up to: 4.2.2
 Stable tag: 0.4.3
-License: GPLv2 Copyright (c) 2014 LaunchKey, Inc.
+License: GPLv2 Copyright (c) 2015 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+== Upgrade Notice ==
+
+This upgrade provides the native implementation of the LaunchKey service.  The native implementation is more secure regarding secret data.
 
 == Description ==
 
 Stop using insecure passwords! With [LaunchKey](https://launchkey.com), you can securely log in to WordPress using your mobile phone or tablet.
 
-NEW BIOMETRIC AUTHENTICATION AVAILABLE!!! LaunchKey is the first WordPress plugin that allows you to protect your WordPress site with biometric face scan and fingerprint scan!!
-
 = What is LaunchKey? =
 
-[LaunchKey](https://launchkey.com) is the mobile authentication platform for the post-password era. With LaunchKey, an individual’s unique mobile phone or tablet is transformed in to a smart key capable of authenticating its owner to any online or offline application, including WordPress!  
-
+[LaunchKey](https://launchkey.com) is the mobile authentication platform for the post-password era. With LaunchKey, an individual’s unique mobile phone or tablet is transformed in to a smart key capable of authenticating its owner to any online or offline application, including WordPress!
 
 = How does LaunchKey work? =
 
@@ -42,7 +43,9 @@ End users may read our detailed mobile app guide while developers can view our e
 
 == Installation ==
 
-Full documentation: https://launchkey.com/docs/plugins/wordpress
+Full documentation: https://docs.launchkey.com/developer/cms/word-press/
+
+= Quick Start with OAuth =
 
 1. Download LaunchKey from the [Apple App Store](https://itunes.apple.com/us/app/id609372788?mt=8) or [Google Play](https://play.google.com/store/apps/details?id=com.launchkey) and create a new account or pair your existing LaunchKey account.
 
@@ -75,6 +78,18 @@ By default, your password will still remain after you pair your LaunchKey accoun
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
+= 1.0.0 =
+* Tested up to 4.2.2
+* Split up plugin file and code
+* Moved SSL Verify from constant to option
+* Encrypt secret data in plug-in options
+* Stopped displaying secret data in settings.  Now shows hash value.
+* Add native (non-OAuth) authentication
+* Add white label functionality
+* Add reminders to configure plugin
+* Add configuration wizard
+* Update User Profile options section for better readability
+* Add "Paired" column to users list
 
 = 0.4.3 =
 * Add icon to assets
