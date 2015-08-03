@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa, biometry, biometric, face scan, facial scan, selfie, fingerprint, finger scan
 Requires at least: 3.5
 Tested up to: 4.2.3
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 Copyright (c) 2015 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ By default, your password will still remain after you pair your LaunchKey accoun
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
+= 1.0.2 =
+* Version release fix
+
 = 1.0.1 =
 * Cosmetic changes to configuration wizard
 
