@@ -3,14 +3,14 @@ Contributors: launchkey
 Donate link: https://launchkey.com/
 Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa, biometry, biometric, face scan, facial scan, selfie, fingerprint, finger scan
 Requires at least: 3.5
-Tested up to: 4.2.2
-Stable tag: 0.4.3
+Tested up to: 4.2.3
+Stable tag: 1.0.1
 License: GPLv2 Copyright (c) 2015 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Upgrade Notice ==
 
-This upgrade provides the native implementation of the LaunchKey service.  The native implementation is more secure regarding secret data.
+This upgrade provides the native implementation of the LaunchKey service.  The native implementation is more secure regarding secret data.  After you upgrade, your OAuth based configuration will still work as before but you will get deprecation notices as the OAuth implementation will not be supported in a future release.
 
 == Description ==
 
@@ -45,23 +45,19 @@ End users may read our detailed mobile app guide while developers can view our e
 
 Full documentation: https://docs.launchkey.com/developer/cms/word-press/
 
-= Quick Start with OAuth =
+= Quick Start =
 
-1. Download LaunchKey from the [Apple App Store](https://itunes.apple.com/us/app/id609372788?mt=8) or [Google Play](https://play.google.com/store/apps/details?id=com.launchkey) and create a new account or pair your existing LaunchKey account.
+1. Install and activate the LaunchKey WordPress Plugin
 
-2. Log into your online [dashboard](https://dashboard.launchkey.com) and create a new developer app by clicking [New app](https://dashboard.launchkey.com/my/newapp) located in the left side navigation.
+2. Start the configuration wizard at one of these locations:
 
-3. After you've created your new app, copy the App Key and Secret Key (click the "Generate new key" button) from the App Details page and *keep these* for future steps.
+    * Click the "Wizard" link in the LaunchKey actions menu of the Plugins List
+    * Click the "Configure LaunchKey" button at the top on any Admin page
+    * Go to the "LaunchKey" settings page
 
-4. While still on the App Details page, check the checkbox next to "OAuth" and enter the domain you've installed this plugin on.
+3. Complete the steps in the wizard
 
-5. Download, install and activate the LaunchKey WordPress plugin from the WordPress plugin repository.
-
-6. Navigate to the LaunchKey settings section (WP Admin > Settings > LaunchKey) and enter the App Key and Secret Key you saved from step 3.
-
-7. Finally, navigate to your Profile Options page by clicking on your username in the top right corner of the WP admin page and click the "Pair" link under the "LaunchKey Options" section. Next, enter your LaunchKey username and authorize the request on your paired device. When you're redirected back to the WP Profile Options page, you're done!
-
-You will now be able to log in and out of WordPress using LaunchKey.
+Once all of et steps in the wizard are completed, you are ready to use the LaunchKey WordPress plugin.
 
 == Frequently Asked Questions ==
 
@@ -78,6 +74,9 @@ By default, your password will still remain after you pair your LaunchKey accoun
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
+= 1.0.1 =
+* Cosmetic changes to configuration wizard
+
 = 1.0.0 =
 * Tested up to 4.2.2
 * Split up plugin file and code
@@ -151,7 +150,15 @@ Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Screenshots ==
 
-1. 'Log in with LaunchKey' button added to WP-login
-2. WP Admin > Settings > LaunchKey
-3. WP Admin > Profile > LaunchKey Options
-4. Showing successful pair with LaunchKey account
+1. Passwordless WP-login screen
+2. Session Expire - Full integration with WordPress heartbeat enables remote session expiration with your Mobile Authenticator
+3. WP Admin > Settings > LaunchKey - Not configured shows setup wizard
+4. WP Admin > Settings > LaunchKey - Configuration Wizard -  Takes you step by step through the entire process
+5. WP Admin > Settings > LaunchKey - Configuration Wizard - Allows you to set up the LaunchKey Mobile Authenticator or use your own authenticator with a LaunchKey White Label implementation
+6. WP Admin > Settings > LaunchKey - Configuration Wizard - Walks you through verifying your configuration settings once completed
+7. WP Admin > Settings > LaunchKey - Configuration Wizard - Visual verification that everything is working
+8. WP Admin > Settings > LaunchKey - Configured
+9. WP Admin > Users - Users list shows LaunchKey paired status of user accounts
+10. WP Admin > Profile > LaunchKey Options - Unpaired
+11. WP Admin > Profile > LaunchKey Options - Paired with Password
+12. WP Admin > Profile > LaunchKey Options - Paired without Password

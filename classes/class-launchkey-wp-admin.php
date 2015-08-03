@@ -237,7 +237,6 @@ class LaunchKey_WP_Admin {
 		     empty( $options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] )
 		) {
 			$this->render_template( 'admin/activate-plugin', array(
-				'wizard_url'   => $this->get_config_wizard_url(),
 				'settings_url' => $this->wp_facade->admin_url( 'options-general.php?page=launchkey-settings' ),
 				'icon_url'     => $this->wp_facade->plugins_url( '/public/launchkey-logo-white.png', dirname( __FILE__ ) )
 			) );
@@ -258,8 +257,8 @@ class LaunchKey_WP_Admin {
 		$links                  = array(
 			sprintf(
 				$template,
-				$this->get_config_wizard_url(),
-				$this->wp_facade->__( 'Wizard', $this->language_domain )
+				$this->wp_facade->admin_url( 'options-general.php?page=launchkey-settings#wizard-1' ),
+				$this->wp_facade->__( 'Setup Wizard', $this->language_domain )
 			),
 			sprintf(
 				$template,
