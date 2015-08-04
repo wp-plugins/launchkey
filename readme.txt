@@ -1,7 +1,7 @@
 === LaunchKey ===
 Contributors: launchkey 
 Donate link: https://launchkey.com/
-Tags: LaunchKey, launch key, launch, key, oauth, security, login, sign in, log in, authentication, key, SSO, ACL, connect, cyber security, cyber, identity, two-factor, multi-factor, two factor, multi factor, 2fa, mfa, tfa, biometry, biometric, face scan, facial scan, selfie, fingerprint, finger scan
+Tags: 2 step, 2 step authentication, 2-factor, 2FA, access, access management, authentication, biometric, biometrics, decentralized, encryption, fencing, fingerprint, geofencing, identity, IAM, iPhone, LaunchKey, Launch Key, log in, login, MFA, mobile, MFA, multi-factor, multifactor, out of band, password, passwords, phishing, phone, PIN, secure, security, security policies, SSL, strong authentication, token, tokens, two step, two factor, two-factor authentication, white label, wp-admin, wp-login
 Requires at least: 3.5
 Tested up to: 4.2.3
 Stable tag: 1.0.2
@@ -14,31 +14,41 @@ This upgrade provides the native implementation of the LaunchKey service.  The n
 
 == Description ==
 
-Stop using insecure passwords! With [LaunchKey](https://launchkey.com), you can securely log in to WordPress using your mobile phone or tablet.
+With [LaunchKey](https://launchkey.com), you can remove the risk and hassle of passwords in WordPress with a login alternative that’s more secure, more capable, and easier to use than traditional passwords and 2FA tokens.
 
-= What is LaunchKey? =
+= Top features =
 
-[LaunchKey](https://launchkey.com) is the mobile authentication platform for the post-password era. With LaunchKey, an individual’s unique mobile phone or tablet is transformed in to a smart key capable of authenticating its owner to any online or offline application, including WordPress!
+* Log in to WordPress without passwords. (user’s opt-in individually)
+* Remotely log out of WordPress.
+* More authentication options. (e.g. biometrics, geofencing, etc.)
+* Hide the password field in the WP login form.
+* Remove passwords from WordPress database to prevent possible theft, brute force, database injection, phishing, and other attack vectors.
+* Setup security policies controlling who can log in, what level of authentication they must utilize, etc.
+* Don’t want to use the LaunchKey-branded mobile app? Use [LaunchKey White Label](https://launchkey.com/whitelabel) to leverage your own mobile app(s).
 
-= How does LaunchKey work? =
+= How does it work? =
 
-Instead of logging in with passwords, LaunchKey forwards a login request to your paired mobile device where you can authorize the request through the free LaunchKey mobile app (available on iOS, Android, and Windows Phone). 
+Instead of logging in to WordPress with a username and password, WordPress will simply push a login request to a user’s mobile device via the free LaunchKey mobile app (available on iOS, Android, and Windows Phone). Once a request is received, a user can authorize the login request inside the LaunchKey mobile app by authenticating with the security factors they’ve chosen to use, while fraudulent or accidental login requests can be easily denied.
 
-= How does LaunchKey provide more security? =
+= What types of authentication is supported? =
 
-Not only does LaunchKey eliminate the liability of utilizing passwords in the first place, it provides true multi-factor authentication through a variety of auth factors including biometric face scan and fingerprint scan, geofencing, in-app combination and PIN locks, and more! Furthermore, by shifting the layer of authentication from your WordPress site to your mobile device, you eliminate many common attack vectors prevalent in password-based authentication.
+LaunchKey makes it easy for users to employ true multi-factor authentication (MFA) through a variety of strong authentication options on their smartphone or mobile device. Authentication options include active and passive security factors such as biometric fingerprint scan, geofencing (i.e. restricting authorization to one or more geographic locations), facial recognition, Bluetooth device factors (i.e. ensuring a Bluetooth device is within range before allowing authorization to proceed), as well as PIN codes, pattern codes, and more. 
 
-= How do I know LaunchKey is secure? =
+= What happens if a device is lost or stolen? =
 
-At LaunchKey, security and privacy are paramount. As such, we architected LaunchKey to be an anonymous service. We don’t collect personally identifying information on our users, and any personal information used to verify authentication factors (e.g. biometric data, geographic coordinates, etc.) are stored securely on your device, not on LaunchKey servers. As a company, we're not even capable of authenticating or logging in on behalf of our users. Additionally, the entire LaunchKey platform has been independently audited for security by Veracode, Praetorian Labs, and our active community of “white hat” security researchers.
+Lost or stolen devices can easily be remotely unpaired, rendering the mobile device useless as an authenticator. Remote unpairing is available through a simple online form or through another paired mobile device via the LaunchKey mobile app.
 
-= What if I lose my phone? = 
+= How do I know the LaunchKey service is secure? =
 
-A paired device can be remotely unpaired through this online [form](https://launchkey.com/unpair). If you have another paired device with the same LaunchKey account, you may also unpair your lost device through the control panel of the device you still have possession of.
+In addition to regular security audits performed by 3rd party security researchers, LaunchKey is architected in such a manner that makes it impossible for a LaunchKey representative or anyone else to authenticate on behalf of an end user or modify a user’s response. This is possible because of LaunchKey’s unique cryptographic architecture. In fact, the LaunchKey service is 100% anonymous. All sensitive authentication data is stored locally on the user’s mobile device in secure storage and it’s inaccessible to the LaunchKey service as well as the application leveraging LaunchKey’s authentication platform (in this case, WordPress). 
 
-= Where can I find out more? =
+= Where can I find out more information on LaunchKey? =
 
-End users may read our detailed mobile app guide while developers can view our extensive online documentation.
+LaunchKey can work with any online application. For more information, visit [launchkey.com](https://launchkey.com).
+
+= Where can I find more information on how to use the LaunchKey mobile app? =
+
+View the LaunchKey mobile user guide [here](https://docs.launchkey.com/user/mobile-app-guide/index.html).
 
 
 == Installation ==
