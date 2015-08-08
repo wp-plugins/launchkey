@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: 2 step, 2 step authentication, 2-factor, 2FA, access, access management, authentication, biometric, biometrics, decentralized, encryption, fencing, fingerprint, geofencing, identity, IAM, iPhone, LaunchKey, Launch Key, log in, login, MFA, mobile, MFA, multi-factor, multifactor, out of band, password, passwords, phishing, phone, PIN, secure, security, security policies, SSL, strong authentication, token, tokens, two step, two factor, two-factor authentication, white label, wp-admin, wp-login
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 Copyright (c) 2015 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,8 +84,14 @@ By default, your password will still remain after you pair your LaunchKey accoun
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
+= 1.0.4 =
+* Tested uo to 4.3
+
+= 1.0.3 =
+* Release inconsistency change.  No actual code changed
+
 = 1.0.2 =
-* Version release fix
+* Version release fix. No actual changes to the code
 
 = 1.0.1 =
 * Cosmetic changes to configuration wizard
