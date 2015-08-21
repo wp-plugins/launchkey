@@ -11,11 +11,12 @@
 (function ($) {
     // Hide Password field toggle
     var $passwordField  = $('[for="user_pass"]'),
+        $passwordParent = $passwordField.parent(),
         $passwordToggle = $('#lk-pass-toggle');
-    $passwordField.hide();
+    $passwordField.detach();
     $passwordToggle.on('click', function(e){
         e.preventDefault();
-        $passwordField.show();
+        $passwordField.appendTo($passwordParent);
         $('#user_pass').focus()
         $(this).hide();
     });

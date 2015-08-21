@@ -63,7 +63,7 @@
             $('#verify-processing').show();
             $.ajax({
                 url: config.url,
-                method: 'POST',
+                type: 'POST',
                 data: {nonce: config.nonce, username: username},
                 success: function (data) {
                     var error_text;
@@ -136,7 +136,7 @@
             $('#verify-processing').show();
             $.ajax({
                 url: config.url,
-                method: 'POST',
+                type: 'POST',
                 data: {nonce: config.nonce, verify_action: 'pair'},
                 success: function (data) {
                     $('#verify-processing').hide();
