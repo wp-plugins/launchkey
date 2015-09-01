@@ -4,7 +4,7 @@ Donate link: https://launchkey.com/
 Tags: 2 step, 2 step authentication, 2-factor, 2FA, access, access management, authentication, biometric, biometrics, decentralized, encryption, fencing, fingerprint, geofencing, identity, IAM, iPhone, LaunchKey, Launch Key, log in, login, MFA, mobile, MFA, multi-factor, multifactor, out of band, password, passwords, phishing, phone, PIN, secure, security, security policies, SSL, strong authentication, token, tokens, two step, two factor, two-factor authentication, white label, wp-admin, wp-login
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 Copyright (c) 2015 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
