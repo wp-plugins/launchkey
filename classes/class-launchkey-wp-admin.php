@@ -47,8 +47,8 @@ class LaunchKey_WP_Admin {
 		LaunchKey_WP_Template $template,
 		$language_domain
 	) {
-		$this->wp_facade       = $wp_facade;
-		$this->template        = $template;
+		$this->wp_facade = $wp_facade;
+		$this->template = $template;
 		$this->language_domain = $language_domain;
 	}
 
@@ -90,121 +90,54 @@ class LaunchKey_WP_Admin {
 	 */
 	public function create_launchkey_settings_page() {
 		$options = $this->get_launchkey_options();
+		if ( LaunchKey_WP_Implementation_Type::SSO === $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) {
+			$callback_url = $this->wp_facade->wp_login_url();
+		} else {
+			$callback_url = $this->wp_facade->admin_url( 'admin-ajax.php?action=' . LaunchKey_WP_Native_Client::CALLBACK_AJAX_ACTION );
+		}
+		$hasMcrypt = $this->wp_facade->extension_loaded( 'mcrypt' );
+		$hasOpenSSL = $this->wp_facade->extension_loaded( 'openssl' );
+		$hasCurl = $this->wp_facade->extension_loaded( 'curl' );
+		$hasDOM = $this->wp_facade->extension_loaded( 'dom' );
+		$hasPrerequisites = ( $hasCurl && $hasDOM && $hasMcrypt && $hasOpenSSL );
 		$this->render_template( 'admin/settings', array(
-			'callback_url'       => $this->wp_facade->admin_url( 'admin-ajax.php?action=' . LaunchKey_WP_Native_Client::CALLBACK_AJAX_ACTION ),
-			'rocket_key'         => $options[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ],
-			'app_display_name'   => $options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ],
-			'ssl_verify_checked' => $options[ LaunchKey_WP_Options::OPTION_SSL_VERIFY ] ? 'checked="checked"' : ''
+			'callback_url' => $callback_url,
+			'domain' => $this->wp_facade->parse_url( $this->wp_facade->admin_url(), PHP_URL_HOST ),
+			'rocket_key' => $options[LaunchKey_WP_Options::OPTION_ROCKET_KEY],
+			'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME],
+			'ssl_verify_checked' => $options[LaunchKey_WP_Options::OPTION_SSL_VERIFY] ? 'checked="checked"' : '',
+			'mcrypt_pass_fail' => $hasMcrypt ? 'pass' : 'fail',
+			'openssl_pass_fail' => $hasOpenSSL ? 'pass' : 'fail',
+			'curl_pass_fail' => $hasCurl ? 'pass' : 'fail',
+			'dom_pass_fail' => $hasDOM ? 'pass' : 'fail',
+			'show_sso_next' => $hasPrerequisites ? 'show' : 'hide',
+			'show_sso_back' => $hasPrerequisites ? 'hide' : 'show',
+			'wp_username' => $this->wp_facade->wp_get_current_user()->user_login,
+			'sso_entity_id' => $options[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID],
+			'sso_public_key' => $options[LaunchKey_WP_Options::OPTION_SSO_CERTIFICATE],
+			'sso_login_url' => $options[LaunchKey_WP_Options::OPTION_SSO_LOGIN_URL],
+			'sso_logout_url' => $options[LaunchKey_WP_Options::OPTION_SSO_LOGOUT_URL],
+			'sso_error_url' => $options[LaunchKey_WP_Options::OPTION_SSO_ERROR_URL],
+			'settings-sso-visible' => LaunchKey_WP_Implementation_Type::SSO === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ? "" : "hide",
+			'settings-standard-visible' => LaunchKey_WP_Implementation_Type::SSO === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ? "hide" : "",
 		) );
 	}
 
 	public function check_option( $input ) {
 		$options = $original_options = $this->get_launchkey_options();
-		$errors  = array();
-		if ( empty( $input[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ] ) ) {
-			$errors[] = $this->wp_facade->__( 'Rocket Key is a required field', $this->language_domain );
+		$errors = array();
+
+		$implementation_type = $this->process_implementation_type( $input, $errors, $options );
+
+		if ( LaunchKey_WP_Implementation_Type::SSO === $implementation_type ) {
+			$this->process_sso_options( $input, $errors, $options );
 		} else {
-
-			$rocket_key = trim( $input[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ] );
-			if ( ! is_numeric( $rocket_key ) ) {
-				$errors[] = $this->wp_facade->__( 'Rocket Key must be numeric', $this->language_domain );
-			} elseif ( strlen( $rocket_key ) !== 10 ) {
-				$errors[] = $this->wp_facade->__( 'Rocket Key must be 10 digits', $this->language_domain );
-			} else {
-				$options[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ] = $rocket_key;
-			}
+			$this->process_standard_options( $input, $errors, $options );
 		}
 
-		if ( empty( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) &&
-		     empty( $options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] )
-		) {
-			$errors[] = $this->wp_facade->__( 'Secret Key is a required field', $this->language_domain );
-		} else if ( ! empty( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) ) {
-			$secret_key = trim( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] );
-			if ( ! ctype_alnum( $secret_key ) ) {
-				$errors[] = $this->wp_facade->__( 'Secret Key must be alphanumeric', $this->language_domain );
-			} elseif ( strlen( $secret_key ) !== 32 ) {
-				$errors[] = $this->wp_facade->__( 'Secret Key must be 32 characters', $this->language_domain );
-			} else {
-				$options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] = $secret_key;
-			}
-		}
-
-		$implementation_type = isset( $input[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) ?
-			trim( $input[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) : null;
-		if ( empty( $implementation_type ) ) {
-			$errors[] = $this->wp_facade->__( 'You must select an implementation type', $this->language_domain );
-		} elseif ( ! LaunchKey_WP_Implementation_Type::is_valid( $implementation_type ) ) {
-			$errors[] = $this->wp_facade->__( 'An invalid implelementation type was submitted', $this->language_domain );
-		} else {
-			if (
-				isset( $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) &&
-				LaunchKey_WP_Implementation_Type::WHITE_LABEL ===
-				$options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] &&
-				LaunchKey_WP_Implementation_Type::WHITE_LABEL !== $implementation_type &&
-				isset( $options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] ) &&
-				'LaunchKey' !== $options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] &&
-				( empty( $input[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] ) ||
-				  'LaunchKey' !== $input[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] )
-			) {
-				$input[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] = 'LaunchKey';
-				$errors[]                                               = $this->wp_facade->__(
-					'App Display Name was reset as the Implementation Type is no longer White Label',
-					$this->language_domain
-				);
-			}
-			$options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] = $implementation_type ?: null;
-		}
-
-		$app_display_name = isset( $input[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] ) ?
-			trim( $input[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] ) : null;
-		if (
-			'LaunchKey' !== $app_display_name &&
-			LaunchKey_WP_Implementation_Type::WHITE_LABEL !==
-			$options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ]
-		) {
-			$errors[]                                                 = $this->wp_facade->__(
-				'App Display Name can only be modified for White Label implementations',
-				$this->language_domain
-			);
-			$options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] = 'LaunchKey';
-		} else {
-			$options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ] = $app_display_name ?: null;
-		}
-
-		if (
-			empty( $_FILES['private_key']['tmp_name'] ) &&
-			empty( $options[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] ) &&
-			isset( $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) &&
-			LaunchKey_WP_Implementation_Type::requires_private_key( $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] )
-		) {
-			$errors[] = $this->wp_facade->__(
-				'Private Key is required',
-				$this->language_domain
-			);
-		} else if ( ! empty( $_FILES['private_key']['tmp_name'] ) ) {
-			$private_key = @file_get_contents( $_FILES['private_key']['tmp_name'] );
-			$rsa         = new Crypt_RSA();
-			if ( @$rsa->loadKey( $private_key ) ) {
-				if ( $rsa->getPrivateKey( $rsa->privateKeyFormat ) ) {
-					$options[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] = $private_key;
-				} else {
-					$errors[] = $this->wp_facade->__(
-						'The Key file provided was a valid RSA key file but did not contain a private key.  Did you mistakenly supply the public key file?',
-						$this->language_domain
-					);
-				}
-			} else {
-				$errors[] = $this->wp_facade->__(
-					'The Private Key provided was invalid',
-					$this->language_domain
-				);
-			}
-		}
-
-		$options[ LaunchKey_WP_Options::OPTION_SSL_VERIFY ] =
-			isset( $input[ LaunchKey_WP_Options::OPTION_SSL_VERIFY ] ) &&
-			'on' === $input[ LaunchKey_WP_Options::OPTION_SSL_VERIFY ];
+		$options[LaunchKey_WP_Options::OPTION_SSL_VERIFY] =
+			isset( $input[LaunchKey_WP_Options::OPTION_SSL_VERIFY] ) &&
+			'on' === $input[LaunchKey_WP_Options::OPTION_SSL_VERIFY];
 
 		return array( $options, $errors );
 	}
@@ -217,7 +150,7 @@ class LaunchKey_WP_Admin {
 	public function oauth_warning() {
 		$options = $this->get_launchkey_options();
 		if ( LaunchKey_WP_Implementation_Type::OAUTH ===
-		     $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ]
+		     $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE]
 		) {
 			$this->render_template( 'admin/oauth-deprecation-warning' );
 		}
@@ -229,16 +162,25 @@ class LaunchKey_WP_Admin {
 	 * @since 1.0.0
 	 */
 	public function activate_notice() {
-		$options     = $this->get_launchkey_options();
+		$options = $this->get_launchkey_options();
 		$hook_suffix = $this->wp_facade->get_hook_suffix();
 
 		// If we are on a relevant page to the plugin and it's not configured, show the activate banner
 		if ( in_array( $hook_suffix, array( 'plugins.php', 'users.php', 'profile.php' ) ) &&
-		     empty( $options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] )
+		     (
+			     (
+				     LaunchKey_WP_Implementation_Type::SSO === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE]
+				     && empty( $options[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID] )
+			     )
+			     || (
+				     LaunchKey_WP_Implementation_Type::SSO !== $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE]
+				     && empty( $options[LaunchKey_WP_Options::OPTION_SECRET_KEY] )
+			     )
+		     )
 		) {
 			$this->render_template( 'admin/activate-plugin', array(
 				'settings_url' => $this->wp_facade->admin_url( 'options-general.php?page=launchkey-settings' ),
-				'icon_url'     => $this->wp_facade->plugins_url( '/public/launchkey-logo-white.png', dirname( __FILE__ ) )
+				'icon_url' => $this->wp_facade->plugins_url( '/public/launchkey-logo-white.png', dirname( __FILE__ ) )
 			) );
 		}
 	}
@@ -254,7 +196,7 @@ class LaunchKey_WP_Admin {
 	 */
 	public function add_action_links( $standard_links ) {
 		static $template = '<a href="%s">%s</a>';
-		$links                  = array(
+		$links = array(
 			sprintf(
 				$template,
 				$this->wp_facade->admin_url( 'options-general.php?page=launchkey-settings#wizard-1' ),
@@ -291,5 +233,163 @@ class LaunchKey_WP_Admin {
 	 */
 	private function get_config_wizard_url() {
 		return $this->wp_facade->admin_url( 'tools.php?page=launchkey-config-wizard' );
+	}
+
+	/**
+	 * @param array $input
+	 * @param array $errors
+	 * @param array $options
+	 * @return string
+	 */
+	private function process_implementation_type( $input, &$errors, &$options ) {
+		$implementation_type = isset( $input[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ) ?
+			trim( $input[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ) : null;
+		if ( empty( $implementation_type ) ) {
+			$errors[] = $this->wp_facade->__( 'You must select an implementation type', $this->language_domain );
+		} elseif ( !LaunchKey_WP_Implementation_Type::is_valid( $implementation_type ) ) {
+			$errors[] = $this->wp_facade->__( 'An invalid implelementation type was submitted', $this->language_domain );
+		} else {
+			if (
+				isset( $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ) &&
+				LaunchKey_WP_Implementation_Type::WHITE_LABEL === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] &&
+				LaunchKey_WP_Implementation_Type::WHITE_LABEL !== $implementation_type &&
+				isset( $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] ) &&
+				'LaunchKey' !== $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] &&
+				( empty( $input[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] ) ||
+				  'LaunchKey' !== $input[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] )
+			) {
+				$input[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] = 'LaunchKey';
+				$errors[] = $this->wp_facade->__(
+					'App Display Name was reset as the Implementation Type is no longer White Label',
+					$this->language_domain
+				);
+			}
+			$options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] = $implementation_type ?: null;
+		}
+		return $implementation_type;
+	}
+
+	/**
+	 * @param array $errors
+	 * @param array $options
+	 *
+	 * @internal param array $input
+	 */
+	private function process_sso_options( $input, &$errors, &$options ) {
+		if ( empty( $input[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID] ) ) {
+			$errors[] = $this->wp_facade->__(
+				'SSO Profile Entity ID is required',
+				$this->language_domain
+			);
+		} else {
+			$options[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID] = $input[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID];
+		}
+		if (
+			empty( $_FILES['sso_idp']['tmp_name'] ) &&
+			empty( $options[LaunchKey_WP_Options::OPTION_SSO_CERTIFICATE] )
+		) {
+			$errors[] = $this->wp_facade->__(
+				'SSO Profile File is required',
+				$this->language_domain
+			);
+		} else if ( !empty( $_FILES['sso_idp']['tmp_name'] ) ) {
+			try {
+				$idp_doc = SAML2_DOMDocumentFactory::fromString( file_get_contents( $_FILES['sso_idp']['tmp_name'] ) );
+				$helper = LaunchKey_WP_SSO_Config_Helper::from_DOM_document( $idp_doc );
+				$options[LaunchKey_WP_Options::OPTION_SSO_CERTIFICATE] = $helper->get_X509_certificate();
+				$options[LaunchKey_WP_Options::OPTION_SSO_LOGIN_URL] = $helper->get_SSO_redirect();
+				$options[LaunchKey_WP_Options::OPTION_SSO_LOGOUT_URL] = $helper->get_SLO_redirect();
+				$options[LaunchKey_WP_Options::OPTION_SSO_ERROR_URL] = $helper->get_error_redirect();
+
+			} catch ( Exception $e ) {
+				$errors[] = $this->wp_facade->__(
+						'The SSO Profile file provided had an error being parsed',
+						$this->language_domain
+					) . ": " . $e->getMessage();
+			}
+		}
+	}
+
+	/**
+	 * @param array $input
+	 * @param array $errors
+	 * @param array $options
+	 */
+	private function process_standard_options( &$input, &$errors, &$options ) {
+		if ( empty( $input[LaunchKey_WP_Options::OPTION_ROCKET_KEY] ) ) {
+			$errors[] = $this->wp_facade->__( 'Rocket Key is a required field', $this->language_domain );
+		} else {
+
+			$rocket_key = trim( $input[LaunchKey_WP_Options::OPTION_ROCKET_KEY] );
+			if ( !is_numeric( $rocket_key ) ) {
+				$errors[] = $this->wp_facade->__( 'Rocket Key must be numeric', $this->language_domain );
+			} elseif ( strlen( $rocket_key ) !== 10 ) {
+				$errors[] = $this->wp_facade->__( 'Rocket Key must be 10 digits', $this->language_domain );
+			} else {
+				$options[LaunchKey_WP_Options::OPTION_ROCKET_KEY] = $rocket_key;
+			}
+		}
+
+		if ( empty( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) &&
+		     empty( $options[LaunchKey_WP_Options::OPTION_SECRET_KEY] )
+		) {
+			$errors[] = $this->wp_facade->__( 'Secret Key is a required field', $this->language_domain );
+		} else if ( !empty( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ) {
+			$secret_key = trim( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] );
+			if ( !ctype_alnum( $secret_key ) ) {
+				$errors[] = $this->wp_facade->__( 'Secret Key must be alphanumeric', $this->language_domain );
+			} elseif ( strlen( $secret_key ) !== 32 ) {
+				$errors[] = $this->wp_facade->__( 'Secret Key must be 32 characters', $this->language_domain );
+			} else {
+				$options[LaunchKey_WP_Options::OPTION_SECRET_KEY] = $secret_key;
+			}
+		}
+
+
+		$app_display_name = isset( $input[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] ) ?
+			trim( $input[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] ) : null;
+		if (
+			'LaunchKey' !== $app_display_name &&
+			LaunchKey_WP_Implementation_Type::WHITE_LABEL !==
+			$options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE]
+		) {
+			$errors[] = $this->wp_facade->__(
+				'App Display Name can only be modified for White Label implementations',
+				$this->language_domain
+			);
+			$options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] = 'LaunchKey';
+		} else {
+			$options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME] = $app_display_name ?: null;
+		}
+
+		if (
+			empty( $_FILES['private_key']['tmp_name'] ) &&
+			empty( $options[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] ) &&
+			isset( $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ) &&
+			LaunchKey_WP_Implementation_Type::requires_private_key( $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] )
+		) {
+			$errors[] = $this->wp_facade->__(
+				'Private Key is required',
+				$this->language_domain
+			);
+		} else if ( !empty( $_FILES['private_key']['tmp_name'] ) ) {
+			$private_key = @file_get_contents( $_FILES['private_key']['tmp_name'] );
+			$rsa = new Crypt_RSA();
+			if ( @$rsa->loadKey( $private_key ) ) {
+				if ( $rsa->getPrivateKey( $rsa->privateKeyFormat ) ) {
+					$options[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] = $private_key;
+				} else {
+					$errors[] = $this->wp_facade->__(
+						'The Key file provided was a valid RSA key file but did not contain a private key.  Did you mistakenly supply the public key file?',
+						$this->language_domain
+					);
+				}
+			} else {
+				$errors[] = $this->wp_facade->__(
+					'The Private Key provided was invalid',
+					$this->language_domain
+				);
+			}
+		}
 	}
 }

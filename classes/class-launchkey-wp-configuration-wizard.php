@@ -144,7 +144,7 @@ class LaunchKey_WP_Configuration_Wizard {
 				'url'                 => $this->wp_facade->admin_url( 'admin-ajax.php?action=' . static::VERIFY_CONFIG_AJAX_ACTION ),
 				'nonce'               => $this->wp_facade->wp_create_nonce( static::VERIFIER_NONCE_KEY ),
 				'implementation_type' => $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ],
-				'is_configured'       => ! empty( $options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ),
+				'is_configured'       => $this->is_plugin_configured ( $options ),
 			)
 		);
 	}
@@ -167,7 +167,7 @@ class LaunchKey_WP_Configuration_Wizard {
 			'launchkey_wizard_config',
 			array(
 				'nonce'               => $this->wp_facade->wp_create_nonce( static::WIZARD_NONCE_KEY ),
-				'is_configured'       => ! empty( $options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ),
+				'is_configured'       => $this->is_plugin_configured( $options ),
 				'implementation_type' => $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ],
 				'url'                 => $this->wp_facade->admin_url( 'admin-ajax.php?action=' . static::DATA_SUBMIT_AJAX_ACTION )
 			)
@@ -189,5 +189,18 @@ class LaunchKey_WP_Configuration_Wizard {
 			}
 			$this->wp_facade->wp_send_json( $response );
 		}
+	}
+
+	private function is_plugin_configured( $options ) {
+		$is_configured = (
+                 $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] === LaunchKey_WP_Implementation_Type::SSO
+                 && ! empty( $options[ LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID ] )
+             )
+			 || (
+                 $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] !== LaunchKey_WP_Implementation_Type::SSO
+                 && ! empty( $options[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] )
+             );
+
+		return $is_configured;
 	}
 }

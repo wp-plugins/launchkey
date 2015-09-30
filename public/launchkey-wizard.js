@@ -79,7 +79,7 @@
         e.preventDefault();
         var $self = $(this);
         var formData = new FormData(this);
-        formData.append('nonce', config.nonce);
+        formData.append('nonce', nonce);
         formData.append('implementation_type', launchkey_wizard_config.implementation_type);
         if (launchkey_wizard_config.implementation_type == 'white-label') {
             var appDisplayName = $(this).closest('[data-view]').find('[name="app_display_name"]').val();
@@ -112,6 +112,39 @@
         });
     });
 
+    // Submit SSO ID Profile XML File
+    $('#lk-wizard-sso-idp-form').on('submit', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        var formData = new FormData(this);
+        formData.append('nonce', nonce);
+        formData.append('implementation_type', launchkey_wizard_config.implementation_type);
+        formData.append('app_display_name', 'LaunchKey'); // Default for standard
+        $.ajax({
+            url: config.url,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (data) {
+                nonce = data.nonce;
+                $('.launchkey-spinner-processing').removeClass('launchkey-spinner-processing');
+                if (data.errors) {
+                    showErrors(data.errors)
+                } else {
+                    if ($self.attr('id') == 'lk-wizard-sso-idp-form') {
+                        window.location.hash = '#wizard-sso-8';
+                    } else {
+                        showNotice('Settings saved');
+                    }
+                }
+            },
+            error: function (data) {
+                showErrors(['Plugin Error.'])
+            }
+        });
+    });
+
     // Event listener for form submit triggers
     $('[data-launchkey-submit]').on('click', function (e) {
         e.preventDefault();
@@ -122,5 +155,7 @@
 
     // Fouc
     $('.lk-fouc').removeClass('lk-fouc');
+
+    $('.hide').hide();
 
 }(jQuery, launchkey_wizard_config));

@@ -159,7 +159,7 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	}
 
 	/**
-	 * Authenticate us user via LaucnhKey
+	 * Authenticate us user via LaunchKey
 	 *
 	 * @param WP_User $user Unused user
 	 * @param string $username
@@ -573,7 +573,7 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 				}
 				$response->add(
 					'launchkey_authentication_error',
-					$this->wp_facade->__( 'Authentication error!  Pease try again later', $this->language_domain )
+					$this->wp_facade->__( 'Authentication error!  Please try again later', $this->language_domain )
 				);
 			}
 		}

@@ -13,6 +13,8 @@ class LaunchKey_WP_Implementation_Type
 
 	const WHITE_LABEL = 'white-label';
 
+	const SSO = 'sso';
+
 	/**
 	 * Is the provided implementation type valid?
 	 *
@@ -21,7 +23,7 @@ class LaunchKey_WP_Implementation_Type
 	 * @return bool
 	 */
 	public static function is_valid( $implementation_type ) {
-		return in_array( $implementation_type, array( static::OAUTH, static::NATIVE, static::WHITE_LABEL ) );
+		return in_array( $implementation_type, array( static::OAUTH, static::NATIVE, static::WHITE_LABEL, static::SSO ) );
 	}
 
 	/**

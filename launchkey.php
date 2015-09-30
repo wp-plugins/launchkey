@@ -3,7 +3,7 @@
   Plugin Name: LaunchKey
   Plugin URI: https://wordpress.org/plugins/launchkey/
   Description:  LaunchKey eliminates the need and liability of passwords by letting you log in and out of WordPress with your smartphone or tablet.
-  Version: 1.0.5
+  Version: 1.1.0
   Author: LaunchKey, Inc.
   Text Domain: launchkey
   Author URI: https://launchkey.com
@@ -107,7 +107,7 @@ function launchkey_plugin_init() {
 		} else {
 			throw new RuntimeException( 'Unable to upgrade LaunchKey meta-data.  Failed to save setting ' . LaunchKey_WP_Admin::OPTION_KEY );
 		}
-	} elseif ( ! get_option( LaunchKey_WP_Admin::OPTION_KEY ) ) {
+	} elseif ( !get_option( LaunchKey_WP_Admin::OPTION_KEY ) ) {
 		add_option( LaunchKey_WP_Admin::OPTION_KEY, array() );
 	}
 
@@ -118,12 +118,40 @@ function launchkey_plugin_init() {
 	 */
 	$template = new LaunchKey_WP_Template( __DIR__ . '/templates', $facade, $language_domain );
 
+	// Prevent XXE Processing Vulnerability
+	libxml_disable_entity_loader( true );
+
 	// Get the plugin options to determine which authentication implementation should be utilized
 	$options = get_option( LaunchKey_WP_Admin::OPTION_KEY );
+	$logger = new LaunchKey_WP_Logger( $facade );
+	$launchkey_client = null;
+	$client = null;
 
 	// Only register the pieces that need to interact with LaunchKey if it's been configured
-	if (!empty($options[LaunchKey_WP_Options::OPTION_SECRET_KEY])) {
+	if ( LaunchKey_WP_Implementation_Type::SSO === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] && !empty( $options[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID] ) ) {
 
+		$container = new LaunchKey_WP_SAML2_Container( $logger );
+		SAML2_Compat_ContainerSingleton::setContainer( $container );
+		$securityKey = new XMLSecurityKey( XMLSecurityKey::RSA_SHA1, array( 'type' => 'public' ) );
+		$securityKey->loadKey( $options[LaunchKey_WP_Options::OPTION_SSO_CERTIFICATE], false, true );
+		$client = new LaunchKey_WP_SSO_Client(
+			$facade,
+			$template,
+			$options[LaunchKey_WP_Options::OPTION_SSO_ENTITY_ID],
+			$securityKey,
+			$options[LaunchKey_WP_Options::OPTION_SSO_LOGIN_URL],
+			$options[LaunchKey_WP_Options::OPTION_SSO_LOGOUT_URL],
+			$options[LaunchKey_WP_Options::OPTION_SSO_ERROR_URL]
+		);
+
+	} elseif ( LaunchKey_WP_Implementation_Type::OAUTH === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] && !empty( $options[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ) {
+		/**
+		 * If the implementation type is OAuth, use the OAuth client
+		 * @see LaunchKey_WP_OAuth_Client
+		 */
+		$client = new LaunchKey_WP_OAuth_Client( $facade, $template );
+
+	} elseif ( !empty( $options[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ) {
 
 		$launchkey_client = \LaunchKey\SDK\Client::wpFactory(
 			$options[LaunchKey_WP_Options::OPTION_ROCKET_KEY],
@@ -132,15 +160,21 @@ function launchkey_plugin_init() {
 			$options[LaunchKey_WP_Options::OPTION_SSL_VERIFY]
 		);
 
-		if ( LaunchKey_WP_Implementation_Type::OAUTH === $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ) {
-			/**
-			 * If the implementation type is OAuth, use the OAuth client
-			 * @see LaunchKey_WP_OAuth_Client
-			 */
-			$client = new LaunchKey_WP_OAuth_Client( $facade, $template );
-		} else {
-			$client = new LaunchKey_WP_Native_Client( $launchkey_client, $facade, $template, $language_domain );
-		}
+		$client = new LaunchKey_WP_Native_Client( $launchkey_client, $facade, $template, $language_domain );
+
+		add_filter( 'init', function () use ( $facade ) {
+			wp_enqueue_script(
+				'launchkey-script',
+				plugins_url( '/public/launchkey-login.js', __FILE__ ),
+				array( 'jquery' ),
+				'1.0.0',
+				true
+			);
+		} );
+	}
+
+	if ( $client ) {
+
 		/**
 		 * Register the non-admin actions for authentication client.  These actions will handle all of the
 		 * authentication work for the plugin.
@@ -157,44 +191,17 @@ function launchkey_plugin_init() {
 		 *
 		 * @see LaunchKey_WP_User_Profile
 		 */
-		$profile = new LaunchKey_WP_User_Profile( $facade, $template, $language_domain );
+		$profile = new LaunchKey_WP_User_Profile( $facade, $template, $language_domain, $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] );
 		$profile->register_actions();
-
-
-		/**
-		 * Add a filter to enqueue login script for the plugin
-		 *
-		 * @since 1.0.0
-		 *
-		 * @see add_filter
-		 * @see wp_enqueue_script
-		 * @link https://developer.wordpress.org/reference/functions/add_filter/
-		 * @link https://developer.wordpress.org/reference/hooks/wp_enqueue_scripts/
-		 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/
-		 */
-		if ( LaunchKey_WP_Implementation_Type::OAUTH !== $options[LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE] ) {
-			add_filter( 'init', function () use ($facade) {
-				wp_enqueue_script(
-					'launchkey-script',
-					plugins_url( '/public/launchkey-login.js', __FILE__ ),
-					array( 'jquery' ),
-					'1.0.0',
-					true
-				);
-			} );
-		}
-
 
 		/**
 		 * Hideous workaround for the wp-login.php page not printing styles in the header like it should.
 		 *
 		 * @since 1.0.0
 		 */
-		if ( ! has_action( 'login_enqueue_scripts', 'wp_print_styles' ) ) {
+		if ( !has_action( 'login_enqueue_scripts', 'wp_print_styles' ) ) {
 			add_action( 'login_enqueue_scripts', 'wp_print_styles', 11 );
 		}
-	} else {
-		$launchkey_client = null;
 	}
 
 	if ( is_admin() ) {
@@ -224,7 +231,7 @@ function launchkey_plugin_init() {
 	 * @link https://developer.wordpress.org/reference/functions/add_filter/
 	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
 	 */
-	add_filter( 'init', function () use ($facade) {
+	add_filter( 'init', function () use ( $facade ) {
 		wp_enqueue_style(
 			'launchkey-style',
 			plugins_url( '/public/launchkey.css', __FILE__ ),

@@ -31,7 +31,7 @@
  * @method bool|int wp_verify_nonce() wp_verify_nonce( string $nonce, string $action = - 1 )
  * @method bool current_user_can() current_user_can( string $capability )
  * @method null wp_logout() wp_logout()
- * @method WP_Uset get_user_by() get_user_by( string $field, mixed $value )
+ * @method WP_User get_user_by() get_user_by( string $field, mixed $value )
  *
  * @method mixed get_option() get_option( string $option, mixed $default = false )
  * @method bool add_option() add_option( string $option, mixed $value = '', string $deprecated = '', string $autoload = 'yes' )

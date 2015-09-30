@@ -23,7 +23,8 @@ class LaunchKey_WP_User_Profile {
 	 *
 	 * @param LaunchKey_WP_Global_Facade $wp_facade
 	 * @param LaunchKey_WP_Template $template
-	 *
+	 * @param string $language_domain
+	 * @param string $implementation_type
 	 */
 	public function __construct( LaunchKey_WP_Global_Facade $wp_facade, LaunchKey_WP_Template $template, $language_domain ) {
 		$this->wp_facade = $wp_facade;
@@ -40,9 +41,13 @@ class LaunchKey_WP_User_Profile {
 		$this->wp_facade->add_action( 'profile_personal_options', array( $this, 'launchkey_personal_options' ) );
 		$this->wp_facade->add_action( 'admin_init', array( $this, 'remove_password_handler' ) );
 		$this->wp_facade->add_action( 'admin_init', array( $this, 'unpair_handler' ) );
-		$this->wp_facade->add_filter( 'manage_users_columns', array( $this, 'add_users_columns' ) );
-		$this->wp_facade->add_filter( 'manage_users_custom_column', array( $this, 'apply_custom_column_filter' ), 10,
-			3 );
+
+		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$implementation_type = $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ];
+		if ( LaunchKey_WP_Implementation_Type::SSO !== $implementation_type ) {
+			$this->wp_facade->add_filter( 'manage_users_columns', array( $this, 'add_users_columns' ) );
+			$this->wp_facade->add_filter( 'manage_users_custom_column', array( $this, 'apply_custom_column_filter' ), 10, 3 );
+		}
 	} //end register_actions
 
 	/**
@@ -64,18 +69,29 @@ class LaunchKey_WP_User_Profile {
 			     ! empty( $user_meta['launchkey_username'] ) )
 		) {
 			//check if password is set before allowing unpair
-			if ( ! empty( $user->user_pass ) ) {
-				$nonce   = $this->wp_facade->wp_create_nonce( static::NONCE_KEY );
+			if ( !empty( $user->user_pass ) ) {
+				$nonce = $this->wp_facade->wp_create_nonce( static::NONCE_KEY );
 				$display = $this->template->render_template( 'personal-options/paired-with-password', array(
-					'app_display_name'    => $options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ],
-					'unpair_uri'          => $this->wp_facade->admin_url( '/profile.php?launchkey_unpair=1&launchkey_nonce=' .
-					                                                      $nonce ),
-					'password_remove_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' .
-					                                                      $nonce )
+					'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME],
+					'unpair_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_unpair=1&launchkey_nonce=' . $nonce ),
+					'password_remove_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' . $nonce )
 				) );
 			} else {
 				$display = $this->template->render_template( 'personal-options/paired-without-password', array(
-					'app_display_name' => $options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ]
+					'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME]
+				) );
+			}
+		} elseif ( LaunchKey_WP_Implementation_Type::SSO === $implementation_type ) {
+			if ( !empty( $user->user_pass ) ) {
+				$nonce = $this->wp_facade->wp_create_nonce( static::NONCE_KEY );
+				$display = $this->template->render_template( 'personal-options/sso-with-password', array(
+					'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME],
+					'unpair_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_unpair=1&launchkey_nonce=' . $nonce ),
+					'password_remove_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' .  $nonce )
+				) );
+			} else {
+				$display = $this->template->render_template( 'personal-options/sso-without-password', array(
+					'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME]
 				) );
 			}
 		} else {
@@ -207,6 +223,8 @@ class LaunchKey_WP_User_Profile {
 				'password_remove_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' .
 				                                                      $nonce )
 			) );
+		} else {
+			$display = "";
 		}
 
 		return $display;

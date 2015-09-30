@@ -14,7 +14,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'launchkey' );
 
 //remove user pairings and auth data
-delete_metadata( 'user', 0, 'launchkey_username',   '', true );
-delete_metadata( 'user', 0, 'launchkey_user',       '', true );
-delete_metadata( 'user', 0, 'launchkey_auth',       '', true );
-delete_metadata( 'user', 0, 'launchkey_authorized', '', true );
+delete_metadata( 'user', 0, 'launchkey_username',    '', true );
+delete_metadata( 'user', 0, 'launchkey_user',        '', true );
+delete_metadata( 'user', 0, 'launchkey_auth',        '', true );
+delete_metadata( 'user', 0, 'launchkey_authorized',  '', true );
+delete_metadata( 'user', 0, 'launchkey_sso_session', '', true );
+

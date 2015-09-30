@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'System' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
+    'SAML2_' => array($vendorDir . '/simplesamlphp/saml2/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Net' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Math' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),

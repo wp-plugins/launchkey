@@ -13,7 +13,7 @@ class LaunchKey_WP_Options {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.1.0';
 
 	const OPTION_IMPLEMENTATION_TYPE = 'implementation_type';
 	const OPTION_ROCKET_KEY = 'rocket_key';
@@ -23,6 +23,11 @@ class LaunchKey_WP_Options {
 	const OPTION_SSL_VERIFY = 'ssl_verify';
 	const OPTION_REQUEST_TIMEOUT = 'request_timeout';
 	const OPTION_LEGACY_OAUTH = 'legacy_oauth';
+	const OPTION_SSO_ENTITY_ID = 'sso_entity_id';
+	const OPTION_SSO_CERTIFICATE = 'sso_certificate';
+	const OPTION_SSO_LOGIN_URL = 'sso_login_url';
+	const OPTION_SSO_LOGOUT_URL = 'sso_logout_url';
+	const OPTION_SSO_ERROR_URL = 'sso_error_url';
 
 	const STATIC_IV = '6CC8B88C26AA10B8F95B107837393BA35C62509605369FADDD545BF8FC76AD38';
 
@@ -43,7 +48,7 @@ class LaunchKey_WP_Options {
 	 */
 	public function __construct( Crypt_AES $crypt_aes ) {
 		$this->crypt_aes = $crypt_aes;
-		$this->cache     = array();
+		$this->cache = array();
 	}
 
 	/**
@@ -61,51 +66,51 @@ class LaunchKey_WP_Options {
 
 		$output['version'] = static::VERSION;
 
-		if ( ! empty( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) ) {
+		if ( !empty( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ) {
 
-			$key = md5( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] );
+			$key = md5( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] );
 
-			if ( empty( $this->cache[ $key ] ) ) {
+			if ( empty( $this->cache[$key] ) ) {
 				/**
 				 * Use the rocket key as the IV. If null, use the static value.
 				 * @link https://docs.launchkey.com/glossary.html#term-iv
 				 */
-				$iv = empty( $input[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ] ) ? static::STATIC_IV : $input[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ];
+				$iv = empty( $input[LaunchKey_WP_Options::OPTION_ROCKET_KEY] ) ? static::STATIC_IV : $input[LaunchKey_WP_Options::OPTION_ROCKET_KEY];
 				$this->crypt_aes->setIV( $iv );
 
 				/**
 				 * Encrypt and Base64 encode the encrypted value and set it as the output value
 				 * @link https://docs.launchkey.com/glossary.html#term-base64
 				 */
-				$this->cache[ $key ] = base64_encode( $this->crypt_aes->encrypt( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) );
+				$this->cache[$key] = base64_encode( $this->crypt_aes->encrypt( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) );
 			}
 
-			$output[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] = $this->cache[ $key ];
+			$output[LaunchKey_WP_Options::OPTION_SECRET_KEY] = $this->cache[$key];
 		} else {
-			$output[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] = null;
+			$output[LaunchKey_WP_Options::OPTION_SECRET_KEY] = null;
 		}
 
-		if ( ! empty( $input[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] ) ) {
+		if ( !empty( $input[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] ) ) {
 
-			$key = md5( $input[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] );
+			$key = md5( $input[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] );
 
-			if ( empty( $this->cache[ $key ] ) ) {
+			if ( empty( $this->cache[$key] ) ) {
 				/**
 				 * Use the decrypted secret key as the IV. If null, use the static value.
 				 * @link https://docs.launchkey.com/glossary.html#term-iv
 				 */
-				$iv = empty( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) ? static::STATIC_IV : $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ];
+				$iv = empty( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ? static::STATIC_IV : $input[LaunchKey_WP_Options::OPTION_SECRET_KEY];
 				$this->crypt_aes->setIV( $iv );
 
 				/**
 				 * Encrypt and Base64 encode the encrypted value and set it as the output value
 				 * @link https://docs.launchkey.com/glossary.html#term-base64
 				 */
-				$this->cache[ $key ] = base64_encode( $this->crypt_aes->encrypt( $input[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] ) );
+				$this->cache[$key] = base64_encode( $this->crypt_aes->encrypt( $input[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] ) );
 			}
-			$output[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] = $this->cache[ $key ];
+			$output[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] = $this->cache[$key];
 		} else {
-			$output[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] = null;
+			$output[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] = null;
 		}
 
 		return $output;
@@ -123,7 +128,7 @@ class LaunchKey_WP_Options {
 	 */
 	public function post_get_option_filter( $input ) {
 		// Define the defaults for attributes
-		$defaults = $this->get_defaults();
+		$defaults = static::get_defaults();
 
 		// If the input is empty (null) set it to an empty array
 		$input ?: array();
@@ -132,39 +137,39 @@ class LaunchKey_WP_Options {
 		$output = array_merge( $defaults, $input );
 
 		// If the secret key attribute is not empty, decrypt it
-		if ( ! empty( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) ) {
+		if ( !empty( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ) {
 
-			$key = md5( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] );
+			$key = md5( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] );
 
-			if ( empty( $this->cache[ $key ] ) ) {
+			if ( empty( $this->cache[$key] ) ) {
 				/**
 				 * Use the rocket key as the IV. If null, use the static value.
 				 * @link https://docs.launchkey.com/glossary.html#term-iv
 				 */
-				$iv = empty( $output[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ] ) ? static::STATIC_IV : $output[ LaunchKey_WP_Options::OPTION_ROCKET_KEY ];
+				$iv = empty( $output[LaunchKey_WP_Options::OPTION_ROCKET_KEY] ) ? static::STATIC_IV : $output[LaunchKey_WP_Options::OPTION_ROCKET_KEY];
 				$this->crypt_aes->setIV( $iv );
 
 				/**
 				 * Decrypt the Base64 decoded string and set it as the output value
 				 * @link https://docs.launchkey.com/glossary.html#term-base64
 				 */
-				$this->cache[ $key ] = $this->crypt_aes->decrypt( base64_decode( $input[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) );
+				$this->cache[$key] = $this->crypt_aes->decrypt( base64_decode( $input[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) );
 			}
 
-			$output[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] = $this->cache[ $key ];
+			$output[LaunchKey_WP_Options::OPTION_SECRET_KEY] = $this->cache[$key];
 		}
 
 		// If the private key attribute is not empty, decrypt it
-		if ( ! empty( $input[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] ) ) {
+		if ( !empty( $input[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] ) ) {
 
-			$key = md5( $input[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] );
+			$key = md5( $input[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] );
 
-			if ( empty( $this->cache[ $key ] ) ) {
+			if ( empty( $this->cache[$key] ) ) {
 				/**
 				 * Use the decrypted secret key as the IV. If null, use the static value.
 				 * @link https://docs.launchkey.com/glossary.html#term-iv
 				 */
-				$iv = empty( $output[ LaunchKey_WP_Options::OPTION_SECRET_KEY ] ) ? static::STATIC_IV : $output[ LaunchKey_WP_Options::OPTION_SECRET_KEY ];
+				$iv = empty( $output[LaunchKey_WP_Options::OPTION_SECRET_KEY] ) ? static::STATIC_IV : $output[LaunchKey_WP_Options::OPTION_SECRET_KEY];
 				$this->crypt_aes->setIV( $iv );
 
 				/**
@@ -173,9 +178,9 @@ class LaunchKey_WP_Options {
 				 *
 				 * We are suppressing errors as
 				 */
-				$this->cache[ $key ] = @$this->crypt_aes->decrypt( base64_decode( $input[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] ) );
+				$this->cache[$key] = @$this->crypt_aes->decrypt( base64_decode( $input[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] ) );
 			}
-			$output[ LaunchKey_WP_Options::OPTION_PRIVATE_KEY ] = $this->cache[ $key ];
+			$output[LaunchKey_WP_Options::OPTION_PRIVATE_KEY] = $this->cache[$key];
 		}
 
 		return $output;
@@ -188,18 +193,24 @@ class LaunchKey_WP_Options {
 	 *
 	 * @return array
 	 *
-	 * @sinc 1.0.0
+	 * @since 1.0.0
 	 */
-	public function get_defaults() {
+	public static function get_defaults() {
 		$defaults = array(
-			static::OPTION_ROCKET_KEY          => null,
-			static::OPTION_SECRET_KEY          => null,
-			static::OPTION_PRIVATE_KEY         => null,
-			static::OPTION_APP_DISPLAY_NAME    => 'LaunchKey',
-			static::OPTION_SSL_VERIFY          => true,
+			static::OPTION_ROCKET_KEY => null,
+			static::OPTION_SECRET_KEY => null,
+			static::OPTION_PRIVATE_KEY => null,
+			static::OPTION_APP_DISPLAY_NAME => 'LaunchKey',
+			static::OPTION_SSL_VERIFY => true,
 			static::OPTION_IMPLEMENTATION_TYPE => LaunchKey_WP_Implementation_Type::NATIVE,
-			static::OPTION_REQUEST_TIMEOUT     => 60,
-			static::OPTION_LEGACY_OAUTH        => false,
+			static::OPTION_REQUEST_TIMEOUT => 60,
+			static::OPTION_LEGACY_OAUTH => false,
+			// Since 1.1.0
+			static::OPTION_SSO_ENTITY_ID => null,
+			static::OPTION_SSO_CERTIFICATE => null,
+			static::OPTION_SSO_LOGIN_URL => null,
+			static::OPTION_SSO_LOGOUT_URL => null,
+			static::OPTION_SSO_ERROR_URL => null,
 		);
 
 		return $defaults;
