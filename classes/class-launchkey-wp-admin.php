@@ -90,18 +90,14 @@ class LaunchKey_WP_Admin {
 	 */
 	public function create_launchkey_settings_page() {
 		$options = $this->get_launchkey_options();
-		if ( LaunchKey_WP_Implementation_Type::SSO === $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) {
-			$callback_url = $this->wp_facade->wp_login_url();
-		} else {
-			$callback_url = $this->wp_facade->admin_url( 'admin-ajax.php?action=' . LaunchKey_WP_Native_Client::CALLBACK_AJAX_ACTION );
-		}
 		$hasMcrypt = $this->wp_facade->extension_loaded( 'mcrypt' );
 		$hasOpenSSL = $this->wp_facade->extension_loaded( 'openssl' );
 		$hasCurl = $this->wp_facade->extension_loaded( 'curl' );
 		$hasDOM = $this->wp_facade->extension_loaded( 'dom' );
 		$hasPrerequisites = ( $hasCurl && $hasDOM && $hasMcrypt && $hasOpenSSL );
 		$this->render_template( 'admin/settings', array(
-			'callback_url' => $callback_url,
+			'callback_url' => $this->wp_facade->admin_url( 'admin-ajax.php?action=' . LaunchKey_WP_Native_Client::CALLBACK_AJAX_ACTION ),
+			'sso_post_url' => $this->wp_facade->wp_login_url(),
 			'domain' => $this->wp_facade->parse_url( $this->wp_facade->admin_url(), PHP_URL_HOST ),
 			'rocket_key' => $options[LaunchKey_WP_Options::OPTION_ROCKET_KEY],
 			'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME],

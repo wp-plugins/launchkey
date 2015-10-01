@@ -719,8 +719,8 @@
     </div>
     <div class="lk-white-panel">
         <p class="step-headline">
-            <span class="lk-big-number">1.</span> Navigate to <a target="_blank"
-                                                                 href="https://dashboard.launchkey.com/organizations"><em>Organizations</em>
+            <span class="lk-big-number">1.</span> Navigate to
+            <a target="_blank" href="https://dashboard.launchkey.com/organizations"><em>Organizations</em>
             in the LaunchKey Dashboard</a>.
         </p>
 
@@ -793,21 +793,24 @@
         </p>
 
         <div class="lk-accordion-container" data-accordion-content="sso-6-4">
-            <p>Follow these steps to configure the Single Sign On profile for your WordPress site.</p>
+            <p>Follow these steps to configure the newly created Single Sign On profile for your WordPress site.</p>
             <ol>
-                <li>Click the <em>New SSO</em> button in the <em>Single Sign On</em> page of your Organization.</li>
-                <li>Enter the following data into the <em>Basic Information</em> panel:
+                <li>Enter the following data into the <em>Configuration</em> panel of the <em>General</em> tab:
                     <ul>
                         <li>
-                            <strong>Profile Name</strong> - This is the name that a user will select from the Single
-                            Sign On page for your organization. it should be relatively short but distinguishable
-                            from other profiles in this Organization's Single Sign On.
+                            <strong>Entity ID</strong> - This is the unique identifier for this profile within your
+                            organization. A good option for the entity ID would be your site domain.  Remember this
+                            value as it will be needed later when you configure WordPress for this SSO profile.
                         </li>
-                        <li><strong>Post URL</strong> - Enter <code>%%%callback_url%%%</code></li>
+                        <li><strong>Post URL</strong> - Enter <code>%%%sso_post_url%%%</code></li>
                     </ul>
                 </li>
-                <li>Read the <em>Developer Terms of Service</em> and click the checkbox to agree.</li>
-                <li>Click the <em>Create SSO</em> button.</li>
+                <li>
+                    Verify the role that will be used when auto-creating users.  If an Organization User that has been
+                    mapped in the <em>Users</em> tab that does not exist within WordPress logs in via SSO, a new user
+                    will be created with the mapped username and the role specified in the <em>role</em> attribute
+                    configured in the <em>Attributes</em> tab.
+                </li>
             </ol>
         </div>
     </div>
@@ -996,7 +999,7 @@
             configuration page.</p>
     </div>
     <div class="lk-content">
-        <a data-view-link="settings" class="lk-next" href="#settings">Finish</a>
+        <a class="lk-next" href="#settings" onclick="document.location.reload(true)">Finish</a>
     </div>
 </div>
 
