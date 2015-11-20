@@ -137,6 +137,7 @@ class GuzzleApiService extends AbstractApiService implements ApiService
      * @throws CommunicationError If there was an error communicating with the endpoint
      * @throws InvalidCredentialsError If the credentials supplied to the endpoint were invalid
      * @throws InvalidRequestError If the endpoint proclaims the request invalid
+     * @throws InvalidResponseError If the response returned is not properly formed
      * @throws ExpiredAuthRequestError If the auth request has expired
      */
     public function poll($authRequest)
@@ -153,12 +154,24 @@ class GuzzleApiService extends AbstractApiService implements ApiService
         try {
             $data = $this->sendRequest($request);
             $auth = json_decode($this->cryptService->decryptRSA($data['auth']), true);
+            if (!isset($auth["auth_request"]) || $authRequest != $auth["auth_request"]) {
+                throw new InvalidResponseError("Auth Request value in response does not match ");
+            }
+
+            if (!isset($data["user_hash"])) {
+                throw new InvalidResponseError("No user hash in response");
+            }
+
+            if (!isset($auth["response"]) || !!isset($auth["user_hash"])) {
+                throw new InvalidResponseError("Invalid auth package returned");
+            }
+
             $response = new AuthResponse(
                 true,
                 $auth["auth_request"],
                 $data["user_hash"],
                 isset($data["organization_user"]) ? $data["organization_user"] : null,
-                $data["user_push_id"],
+                isset($data["user_push_id"]) ? $data["user_push_id"] : null,
                 $auth["device_id"],
                 $auth["response"] == "true"
             );

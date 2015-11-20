@@ -6,13 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'System' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'SAML2_' => array($vendorDir . '/simplesamlphp/saml2/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
-    'Net' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'Math' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
     'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
-    'File' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
 );

@@ -19,17 +19,27 @@ class LaunchKey_WP_User_Profile {
 	private $language_domain;
 
 	/**
+	 * @var bool
+	 */
+	private $is_multi_site;
+
+	/**
 	 * LaunchKey_WP_User_Profile constructor.
 	 *
 	 * @param LaunchKey_WP_Global_Facade $wp_facade
 	 * @param LaunchKey_WP_Template $template
 	 * @param string $language_domain
-	 * @param string $implementation_type
+	 * @param $is_multi_site
 	 */
-	public function __construct( LaunchKey_WP_Global_Facade $wp_facade, LaunchKey_WP_Template $template, $language_domain ) {
+	public function __construct(
+			LaunchKey_WP_Global_Facade $wp_facade,
+			LaunchKey_WP_Template $template,
+			$language_domain,
+			$is_multi_site ) {
 		$this->wp_facade = $wp_facade;
 		$this->template  = $template;
 		$this->language_domain = $language_domain;
+		$this->is_multi_site = $is_multi_site;
 	}
 
 	/**
@@ -42,11 +52,17 @@ class LaunchKey_WP_User_Profile {
 		$this->wp_facade->add_action( 'admin_init', array( $this, 'remove_password_handler' ) );
 		$this->wp_facade->add_action( 'admin_init', array( $this, 'unpair_handler' ) );
 
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 		$implementation_type = $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ];
 		if ( LaunchKey_WP_Implementation_Type::SSO !== $implementation_type ) {
-			$this->wp_facade->add_filter( 'manage_users_columns', array( $this, 'add_users_columns' ) );
-			$this->wp_facade->add_filter( 'manage_users_custom_column', array( $this, 'apply_custom_column_filter' ), 10, 3 );
+			$this->wp_facade->add_filter(
+					$this->is_multi_site ? 'wpmu_users_columns' : 'manage_users_columns',
+					array( $this, 'add_users_columns' )
+			);
+			$this->wp_facade->add_filter(
+					'manage_users_custom_column',
+					array( $this, 'apply_custom_column_filter' ), 10, 3
+			);
 		}
 	} //end register_actions
 
@@ -59,7 +75,7 @@ class LaunchKey_WP_User_Profile {
 	 */
 	public function launchkey_personal_options( $user ) {
 		$user_meta           = $this->wp_facade->get_user_meta( $user->ID );
-		$options             = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options             = $this->get_option();
 		$implementation_type = $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ];
 
 		if ( // OAuth and Native paired display unpair and remove password
@@ -86,7 +102,6 @@ class LaunchKey_WP_User_Profile {
 				$nonce = $this->wp_facade->wp_create_nonce( static::NONCE_KEY );
 				$display = $this->template->render_template( 'personal-options/sso-with-password', array(
 					'app_display_name' => $options[LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME],
-					'unpair_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_unpair=1&launchkey_nonce=' . $nonce ),
 					'password_remove_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' .  $nonce )
 				) );
 			} else {
@@ -223,10 +238,15 @@ class LaunchKey_WP_User_Profile {
 				'password_remove_uri' => $this->wp_facade->admin_url( '/profile.php?launchkey_remove_password=1&launchkey_nonce=' .
 				                                                      $nonce )
 			) );
-		} else {
-			$display = "";
 		}
 
 		return $display;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private function get_option() {
+		return $this->is_multi_site ? $this->wp_facade->get_site_option( LaunchKey_WP_Admin::OPTION_KEY ) : $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
 	}
 }

@@ -142,7 +142,7 @@ class LaunchKey_WP_Logger implements Psr\Log\LoggerInterface {
 		foreach ( $context as $key => $value ) {
 			$context_string .= ( "\n\t" . $key . ": " . (string) $value );
 		}
-		$this->wp_facade->error_log( "[%s] %s%s", $level, $message, $context_string );
+		$this->wp_facade->error_log( sprintf( "[%s] %s%s", $level, $message, $context_string ) );
 	}
 
 	private function debug_log( $level, $message, array $context = array() ) {

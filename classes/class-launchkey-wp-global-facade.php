@@ -34,6 +34,7 @@
  * @method WP_User get_user_by() get_user_by( string $field, mixed $value )
  *
  * @method mixed get_option() get_option( string $option, mixed $default = false )
+ * @method mixed get_network_option() get_network_option( string $option, mixed $default = false )
  * @method bool add_option() add_option( string $option, mixed $value = '', string $deprecated = '', string $autoload = 'yes' )
  * @method bool update_option() update_option( string $option, mixed $value, string $autoload = null )
  * @method bool delete_option() delete_option( string $option )
@@ -62,6 +63,7 @@
  * @method bool is_wp_error() is_wp_error( mixed $thing )
  * @method null add_settings_error() add_settings_error( string $setting, string $code, string $message, string $type = 'error' )
  * @method null add_settings_field() add_settings_field( string $id, string $title, callable $callback, string $page, string $section = 'default', array $args = array() )
+ * @method bool is_multisite() is_multisite()
  */
 class LaunchKey_WP_Global_Facade {
 

@@ -131,12 +131,18 @@ abstract class AbstractApiService implements ApiService
     public function handleCallback(array $queryParameters)
     {
         $this->debugLog("Starting handle of callback", $queryParameters);
-        if (isset($queryParameters["auth"])) {
+        if (isset($queryParameters["auth"]) && isset($queryParameters["auth_request"]) && isset($queryParameters["user_hash"])) {
             $this->debugLog("Callback determined to be auth callback");
-            $response = $this->handleAuthCallback($queryParameters);
-        } elseif (isset($queryParameters["deorbit"])) {
+            $response = $this->handleAuthCallback(
+                $queryParameters["auth"],
+                $queryParameters["auth_request"],
+                $queryParameters["user_hash"],
+                isset($queryParameters["organization_user"]) ? $queryParameters["organization_user"] : null,
+                isset($queryParameters["user_push_id"]) ? $queryParameters["user_push_id"] : null
+            );
+        } elseif (isset($queryParameters["deorbit"]) && isset($queryParameters["signature"])) {
             $this->debugLog("Callback determined to be deorbit callback");
-            $response = $this->handDeOrbitCallback($queryParameters);
+            $response = $this->handDeOrbitCallback($queryParameters["deorbit"], $queryParameters["signature"]);
         } else {
             throw new UnknownCallbackActionError("Could not determine auth callback action");
         }
@@ -144,22 +150,28 @@ abstract class AbstractApiService implements ApiService
     }
 
     /**
-     * @param array $queryParameters
+     * @param string $authPackage
+     * @param string $authRequest
+     * @param string $userHash
+     * @param string $organizationUser
+     * @param string $userPushId
      * @return AuthResponse
-     * @throws InvalidRequestError When auth_request values from post data and decrypted auth data do not match.
+     * @throws InvalidRequestError
      */
-    private function handleAuthCallback(array $queryParameters)
+    private function handleAuthCallback($authPackage, $authRequest, $userHash, $organizationUser, $userPushId)
     {
-        $auth = json_decode($this->cryptService->decryptRSA($queryParameters["auth"]), true);
-        if ($queryParameters["auth_request"] !== $auth["auth_request"]) {
+        $auth = json_decode($this->cryptService->decryptRSA($authPackage), true);
+        if ($authRequest !== $auth["auth_request"]) {
             throw new InvalidRequestError("Invalid auth callback auth_request values did not match");
+        } elseif (!isset($auth["device_id"]) || !isset($auth["response"])) {
+            throw new InvalidRequestError("Invalid auth callback auth package was invalid");
         }
         $response = new AuthResponse(
             true,
-            $auth["auth_request"],
-            $queryParameters["user_hash"],
-            isset($queryParameters["organization_user"]) ? $queryParameters["organization_user"] : null,
-            $queryParameters["user_push_id"],
+            $authRequest,
+            $userHash,
+            $organizationUser,
+            $userPushId,
             $auth["device_id"],
             $auth["response"] == "true"
         );
@@ -167,17 +179,20 @@ abstract class AbstractApiService implements ApiService
     }
 
     /**
-     * @param array $queryParameters
-     *
-     * @return DeOrbitCallback
-     * @throws InvalidRequestError
+     * @param string $deOrbit
+     * @param string $signature
+     * @return string DeOrbitCallback
+     * @throws string InvalidRequestError
      */
-    private function handDeOrbitCallback(array $queryParameters)
+    private function handDeOrbitCallback($deOrbit, $signature)
     {
-        if (!$this->cryptService->verifySignature($queryParameters["signature"], $queryParameters["deorbit"], $this->getPublicKey())) {
+        if (!$this->cryptService->verifySignature($signature, $deOrbit, $this->getPublicKey())) {
             throw new InvalidRequestError("Invalid signature for de-orbit callback");
         }
-        $data = json_decode($queryParameters["deorbit"], true);
+        $data = json_decode($deOrbit, true);
+        if (!$data || !isset($data["launchkey_time"]) || !isset($data["user_hash"])) {
+            throw new InvalidRequestError("Invalid package for de-orbit callback");
+        }
         $lkTime = $this->getLaunchKeyDate($data["launchkey_time"]);
         return new DeOrbitCallback($lkTime, $data["user_hash"]);
     }

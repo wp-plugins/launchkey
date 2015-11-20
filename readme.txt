@@ -3,8 +3,8 @@ Contributors: launchkey
 Donate link: https://launchkey.com/
 Tags: 2 step, 2 step authentication, 2-factor, 2FA, access, access management, authentication, biometric, biometrics, decentralized, encryption, fencing, fingerprint, geofencing, identity, IAM, iPhone, LaunchKey, Launch Key, log in, login, MFA, mobile, MFA, multi-factor, multifactor, out of band, password, passwords, phishing, phone, PIN, secure, security, security policies, SSL, strong authentication, token, tokens, two step, two factor, two-factor authentication, white label, wp-admin, wp-login
 Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 1.0.5
+Tested up to: 4.4
+Stable tag: 1.3.0
 License: GPLv2 Copyright (c) 2015 LaunchKey, Inc.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,10 +84,44 @@ By default, your password will still remain after you pair your LaunchKey accoun
 Remotely unpair your device at anytime by visiting: https://launchkey.com/unpair
 
 == Changelog ==
-= 2.0.0 =
+= 1.3.0 =
+* Add network (multi-site) capability
+* Add SSO create user processing for user_email, first_name, and last_name user attributes.
+
+= 1.2.0 =
+* PHP 7 compliance
+* Add proper database error handling for SSO service
+* Reload plugin settings page after submit to reflect changes properly
+* Update to "handle" must use activation
+* Add Single Log Out for SSO
+
+= 1.1.4 =
+* Fix escalation of privilege error found via bug bounty. (Ported from 1.0.6)
+* Clean up CSS for small browsers with 3rd implementation type in wizard.
+* Add validation for destination, audience, and time for SSO response
+* Add replay attack detection to SSO
+* Turn off autocomplete on standard verification in wizard to prevent important text from being obscured.
+* Inform the user of their WordPress username in standard and white label wizards in case the user was migrating from SSO or OAuth and did not know or remember their WordPress username.
+
+= 1.1.3 =
+* Fix content in SSO wizard
+
+= 1.1.2 =
+* Fix typos in SSO wizard
+* Fix finish redirect for SSO wizard in Safari
+
+= 1.1.1 =
+* Fix changelog versions
+* Settings page show correct POST URL
+* Settings page "Finish" goes to correct page
+
+= 1.1.0 =
 * Tested up to 4.3.1
 * Added LaunchKey SSO integration with setup wizard
 * Updated wizard and plugin page to better inform users how to pair other users' WordPress account with LaunchKey account
+
+= 1.0.6 =
+* Fix escalation of privilege error found via bug bounty.
 
 = 1.0.5 =
 * Detach and append password section of login form instead of hide and show to prevent auto-fill by browser and password managers

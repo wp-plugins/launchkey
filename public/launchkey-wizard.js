@@ -102,7 +102,7 @@
                     if ($self.attr('id') == 'lk-wizard-keys-form') {
                         window.location.hash = '#wizard-8';
                     } else {
-                        showNotice('Settings saved');
+                        location.reload(true);
                     }
                 }
             },

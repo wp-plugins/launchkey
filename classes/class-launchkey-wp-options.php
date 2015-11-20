@@ -29,6 +29,11 @@ class LaunchKey_WP_Options {
 	const OPTION_SSO_LOGOUT_URL = 'sso_logout_url';
 	const OPTION_SSO_ERROR_URL = 'sso_error_url';
 
+	/**
+	 * @since 1.1.0
+	 */
+	const OPTION_VERSION = 'version';
+
 	const STATIC_IV = '6CC8B88C26AA10B8F95B107837393BA35C62509605369FADDD545BF8FC76AD38';
 
 	/**
@@ -37,16 +42,16 @@ class LaunchKey_WP_Options {
 	private $cache;
 
 	/**
-	 * @var Crypt_AES
+	 * @var \phpseclib\Crypt\AES
 	 */
 	private $crypt_aes;
 
 	/**
 	 * LaunchKey_WP_Options constructor.
 	 *
-	 * @param Crypt_AES $crypt_aes
+	 * @param \phpseclib\Crypt\AES $crypt_aes
 	 */
-	public function __construct( Crypt_AES $crypt_aes ) {
+	public function __construct( \phpseclib\Crypt\AES $crypt_aes ) {
 		$this->crypt_aes = $crypt_aes;
 		$this->cache = array();
 	}
@@ -211,6 +216,7 @@ class LaunchKey_WP_Options {
 			static::OPTION_SSO_LOGIN_URL => null,
 			static::OPTION_SSO_LOGOUT_URL => null,
 			static::OPTION_SSO_ERROR_URL => null,
+			static::OPTION_VERSION => 0.0
 		);
 
 		return $defaults;

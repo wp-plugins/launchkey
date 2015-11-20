@@ -41,52 +41,42 @@
     },
     {
         "name": "phpseclib/phpseclib",
-        "version": "0.3.10",
-        "version_normalized": "0.3.10.0",
+        "version": "2.0.0",
+        "version_normalized": "2.0.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpseclib/phpseclib.git",
-            "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4"
+            "reference": "a74aa9efbe61430fcb60157c8e025a48ec8ff604"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
-            "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
+            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/a74aa9efbe61430fcb60157c8e025a48ec8ff604",
+            "reference": "a74aa9efbe61430fcb60157c8e025a48ec8ff604",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.0.0"
+            "php": ">=5.3.3"
         },
         "require-dev": {
             "phing/phing": "~2.7",
             "phpunit/phpunit": "~4.0",
             "sami/sami": "~2.0",
-            "squizlabs/php_codesniffer": "~1.5"
+            "squizlabs/php_codesniffer": "~2.0"
         },
         "suggest": {
             "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
-            "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
-            "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 4.3.3."
+            "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
+            "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
+            "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations.",
+            "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 5.0.0."
         },
-        "time": "2015-01-28 21:50:33",
+        "time": "2015-08-04 04:48:03",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.3-dev"
-            }
-        },
         "installation-source": "dist",
         "autoload": {
-            "psr-0": {
-                "Crypt": "phpseclib/",
-                "File": "phpseclib/",
-                "Math": "phpseclib/",
-                "Net": "phpseclib/",
-                "System": "phpseclib/"
-            },
-            "files": [
-                "phpseclib/Crypt/Random.php"
-            ]
+            "psr-4": {
+                "phpseclib\\": "phpseclib/"
+            }
         },
         "notification-url": "https://packagist.org/downloads/",
         "include-path": [
@@ -141,17 +131,17 @@
     },
     {
         "name": "symfony/event-dispatcher",
-        "version": "v2.7.4",
-        "version_normalized": "2.7.4.0",
+        "version": "v2.7.6",
+        "version_normalized": "2.7.6.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/EventDispatcher.git",
-            "reference": "b58c916f1db03a611b72dd702564f30ad8fe83fa"
+            "url": "https://github.com/symfony/event-dispatcher.git",
+            "reference": "87a5db5ea887763fa3a31a5471b512ff1596d9b8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/b58c916f1db03a611b72dd702564f30ad8fe83fa",
-            "reference": "b58c916f1db03a611b72dd702564f30ad8fe83fa",
+            "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/87a5db5ea887763fa3a31a5471b512ff1596d9b8",
+            "reference": "87a5db5ea887763fa3a31a5471b512ff1596d9b8",
             "shasum": ""
         },
         "require": {
@@ -162,14 +152,13 @@
             "symfony/config": "~2.0,>=2.0.5",
             "symfony/dependency-injection": "~2.6",
             "symfony/expression-language": "~2.6",
-            "symfony/phpunit-bridge": "~2.7",
             "symfony/stopwatch": "~2.3"
         },
         "suggest": {
             "symfony/dependency-injection": "",
             "symfony/http-kernel": ""
         },
-        "time": "2015-08-24 07:13:45",
+        "time": "2015-10-11 09:39:48",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -298,23 +287,23 @@
     },
     {
         "name": "launchkey/launchkey",
-        "version": "v1.1.0",
-        "version_normalized": "1.1.0.0",
+        "version": "v1.2.0",
+        "version_normalized": "1.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/LaunchKey/launchkey-php.git",
-            "reference": "8cac0d1d5c5ae63b38a3ecef281e00367a626c70"
+            "reference": "6fc870b88f105f61ce91fa8d204b1890f3be6dda"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/LaunchKey/launchkey-php/zipball/8cac0d1d5c5ae63b38a3ecef281e00367a626c70",
-            "reference": "8cac0d1d5c5ae63b38a3ecef281e00367a626c70",
+            "url": "https://api.github.com/repos/LaunchKey/launchkey-php/zipball/6fc870b88f105f61ce91fa8d204b1890f3be6dda",
+            "reference": "6fc870b88f105f61ce91fa8d204b1890f3be6dda",
             "shasum": ""
         },
         "require": {
             "guzzle/guzzle": "~3.0",
             "php": ">= 5.3.0",
-            "phpseclib/phpseclib": "~0.3,>= 0.3.5",
+            "phpseclib/phpseclib": "~2.0",
             "psr/log": "~1.0"
         },
         "require-dev": {
@@ -323,11 +312,11 @@
             "phpunit/phpunit": "~4.4",
             "satooshi/php-coveralls": "~0.6"
         },
-        "time": "2015-06-09 19:07:48",
+        "time": "2015-10-17 21:32:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.0.x-dev"
+                "dev-master": "1.1.x-dev"
             }
         },
         "installation-source": "dist",

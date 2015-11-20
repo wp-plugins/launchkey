@@ -96,29 +96,31 @@ class LaunchKey_WP_SSO_Config_Helper {
 	}
 
 	public function get_X509_certificate() {
+		$cert = null;
 		foreach ($this->get_IDP_SSO_descriptor()->KeyDescriptor as $key_descriptor) {
 			foreach ($key_descriptor->KeyInfo->info as $key_info) {
 				if ($key_info instanceof SAML2_XML_ds_X509Data) {
 					foreach ($key_info->data as $data) {
 						if ($data instanceof SAML2_XML_ds_X509Certificate) {
-							return SAML2_Certificate_X509::createFromCertificateData($data->certificate)->getCertificate();
+							$cert = SAML2_Certificate_X509::createFromCertificateData($data->certificate)->getCertificate();
 						}
 					}
 				}
 			}
 		}
-		throw new RuntimeException("No X509 Certificate data");
+		return $cert;
 	}
 
 	/**
 	 * @return SAML2_XML_md_IDPSSODescriptor
 	 */
 	private function get_IDP_SSO_descriptor() {
+		$descriptor = null;
 		foreach ( $this->entityDescriptor->RoleDescriptor as $role_descriptor ) {
 			if ( $role_descriptor instanceof SAML2_XML_md_IDPSSODescriptor ) {
-				return $role_descriptor;
+				$descriptor = $role_descriptor;
 			}
 		}
-		throw new RuntimeException("No IDPSSODescriptor");
+		return $descriptor;
 	}
 }

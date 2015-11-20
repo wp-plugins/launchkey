@@ -7,7 +7,7 @@
 
 //if uninstall not called from WordPress exit
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit();
+	exit;
 }
 
 //remove launchkey options
@@ -20,3 +20,7 @@ delete_metadata( 'user', 0, 'launchkey_auth',        '', true );
 delete_metadata( 'user', 0, 'launchkey_authorized',  '', true );
 delete_metadata( 'user', 0, 'launchkey_sso_session', '', true );
 
+// Drop sessions table
+global $wpdb;
+$table = $wpdb->prefix . "launchkey_sso_sessions";
+$wpdb->query("DROP TABLE IF EXISTS {$table}");

@@ -49,23 +49,35 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	private $pair_error;
 
 	/**
+	 * @var boolean
+	 */
+	private $is_multi_site;
+	/**
+	 * @var
+	 */
+	private $multi_site;
+
+	/**
 	 * LaunchKey_WP_Native_Client constructor.
 	 *
 	 * @param \LaunchKey\SDK\Client $launchkey_client
 	 * @param LaunchKey_WP_Global_Facade $wp_facade
 	 * @param LaunchKey_WP_Template $template
-	 * @param $language_domain
+	 * @param string $language_domain
+	 * @param bool $is_multi_site
 	 */
 	public function __construct(
-		LaunchKey\SDK\Client $launchkey_client,
-		LaunchKey_WP_Global_Facade $wp_facade,
-		LaunchKey_WP_Template $template,
-		$language_domain
+			LaunchKey\SDK\Client $launchkey_client,
+			LaunchKey_WP_Global_Facade $wp_facade,
+			LaunchKey_WP_Template $template,
+			$language_domain,
+			$is_multi_site
 	) {
 		$this->wp_facade        = $wp_facade;
 		$this->launchkey_client = $launchkey_client;
 		$this->template         = $template;
 		$this->language_domain  = $language_domain;
+		$this->is_multi_site    = $is_multi_site;
 	}
 
 	/**
@@ -74,11 +86,13 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	 * @since 1.0.0
 	 */
 	public function register_actions() {
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 
 		$this->wp_facade->add_action( 'login_form', array( $this, 'show_native_login_hint' ) );
 
-		if ( LaunchKey_WP_Implementation_Type::WHITE_LABEL === $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) {
+		if ( LaunchKey_WP_Implementation_Type::WHITE_LABEL ===
+		     $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ]
+		) {
 			$this->wp_facade->add_action( 'login_form', array( $this, 'show_powered_by' ) );
 		}
 
@@ -117,7 +131,7 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	 * @since 1.0.0
 	 */
 	public function show_native_login_hint() {
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 		$this->wp_facade->_echo( $this->template->render_template( 'native-login-hint', array(
 			'app_display_name' => $options[ LaunchKey_WP_Options::OPTION_APP_DISPLAY_NAME ]
 		) ) );
@@ -138,7 +152,8 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	 * @since 1.0.0
 	 */
 	public function progress_bar() {
-		$this->wp_facade->_echo( $this->template->render_template( 'progress-bar', array( 'processing' => 'Processing login' ) ) );
+		$this->wp_facade->_echo( $this->template->render_template( 'progress-bar',
+			array( 'processing' => 'Processing login' ) ) );
 	}
 
 	/**
@@ -259,20 +274,25 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 					'meta_value' => $response->getAuthRequestId()
 				) );
 				if ( count( $users ) > 1 ) {
-					throw new \LaunchKey\SDK\Service\Exception\InvalidRequestError( 'Too many users found for user hash ' . $response->getUserHash() );
+					throw new \LaunchKey\SDK\Service\Exception\InvalidRequestError( 'Too many users found for user hash ' .
+					                                                                $response->getUserHash() );
 				} elseif ( count( $users ) < 1 ) {
-					throw new \LaunchKey\SDK\Service\Exception\InvalidRequestError( 'No user found for user hash ' . $response->getUserHash() );
+					throw new \LaunchKey\SDK\Service\Exception\InvalidRequestError( 'No user found for user hash ' .
+					                                                                $response->getUserHash() );
 				}
 				$user = array_pop( $users );
 
 				// Update the auth value and the user hash in the user metadata based on response data
-				$this->wp_facade->update_user_meta( $user->ID, "launchkey_authorized", $response->isAuthorized() ? 'true' : 'false' );
+				$this->wp_facade->update_user_meta( $user->ID, "launchkey_authorized",
+					$response->isAuthorized() ? 'true' : 'false' );
 				$this->wp_facade->update_user_meta( $user->ID, "launchkey_user", $response->getUserHash() );
 
 				// If this is a native implementation and we have a valid User Push ID in the response, replace the username with that to prevent exposure of the username
-				$options      = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+				$options      = $this->get_option();
 				$user_push_id = $response->getUserPushId();
-				if ( $user_push_id && LaunchKey_WP_Implementation_Type::NATIVE === $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ] ) {
+				if ( $user_push_id && LaunchKey_WP_Implementation_Type::NATIVE ===
+				                      $options[ LaunchKey_WP_Options::OPTION_IMPLEMENTATION_TYPE ]
+				) {
 					$this->wp_facade->update_user_meta( $user->ID, "launchkey_username", $user_push_id );
 				}
 			} elseif ( $response instanceof \LaunchKey\SDK\Domain\DeOrbitCallback ) { // If it's a de-orbit request
@@ -283,7 +303,8 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 					'meta_value' => $response->getUserHash()
 				) );
 				if ( count( $users ) !== 1 ) {
-					throw new \LaunchKey\SDK\Service\Exception\InvalidRequestError( 'Too many users found for user hash ' . $response->getUserHash() );
+					throw new \LaunchKey\SDK\Service\Exception\InvalidRequestError( 'Too many users found for user hash ' .
+					                                                                $response->getUserHash() );
 				}
 				$user = array_pop( $users );
 
@@ -341,12 +362,17 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 			$user = $this->wp_facade->wp_get_current_user();
 
 			// If there is no valid nonce, set the pair error
-			if ( ! $this->wp_facade->wp_verify_nonce( $_POST['launchkey_nonce'], LaunchKey_WP_User_Profile::NONCE_KEY ) ) {
-				$this->pair_error = new WP_Error( 'launchkey_pair_error', $this->wp_facade->__( 'Invalid nonce.  Please try again.', $this->language_domain ) );
+			if ( ! $this->wp_facade->wp_verify_nonce( $_POST['launchkey_nonce'],
+				LaunchKey_WP_User_Profile::NONCE_KEY )
+			) {
+				$this->pair_error = new WP_Error( 'launchkey_pair_error',
+					$this->wp_facade->__( 'Invalid nonce.  Please try again.', $this->language_domain ) );
 			} elseif ( ! $user ) { // If there is no user, set the pair error
-				$this->pair_error = new WP_Error( 'launchkey_pair_error', $this->wp_facade->__( 'You must me logged in to pair', $this->language_domain ) );
+				$this->pair_error = new WP_Error( 'launchkey_pair_error',
+					$this->wp_facade->__( 'You must me logged in to pair', $this->language_domain ) );
 			} elseif ( ! $_POST['launchkey_username'] ) { // If the launchkey_username is blank, set the pair error
-				$this->pair_error = new WP_Error( 'launchkey_pair_error', $this->wp_facade->__( 'Username is required to pair', $this->language_domain ) );
+				$this->pair_error = new WP_Error( 'launchkey_pair_error',
+					$this->wp_facade->__( 'Username is required to pair', $this->language_domain ) );
 			} else { // Otherwise, attempt to pair the LaunchKey userusing the supplied launchkey_username
 				$response = $this->authenticate_user( $user->ID, $_POST['launchkey_username'] );
 				// If there was an error during the authentication process, set the pair error
@@ -382,7 +408,9 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	 */
 	public function white_label_pair_callback() {
 		if ( isset( $_POST['nonce'] ) ) { // If there is no nonce, ignore the request
-			if ( $this->wp_facade->wp_verify_nonce( $_POST['nonce'], LaunchKey_WP_User_Profile::NONCE_KEY ) ) { // If there is a valid nonce
+			if ( $this->wp_facade->wp_verify_nonce( $_POST['nonce'],
+				LaunchKey_WP_User_Profile::NONCE_KEY )
+			) { // If there is a valid nonce
 				if ( $user = $this->wp_facade->wp_get_current_user() ) { // and a current logged in user
 					try {
 						// Create a LaunchKey White Label user with the WordPress username as the unique identifer
@@ -397,11 +425,14 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 							'code'   => $pair_response->getCode()
 						);
 					} catch ( \LaunchKey\SDK\Service\Exception\CommunicationError $e ) { // Communication error response
-						$response = array( 'error' => 'There was a communication error encountered during the pairing process.  Please try again later' );
+						$response =
+							array( 'error' => 'There was a communication error encountered during the pairing process.  Please try again later' );
 					} catch ( \LaunchKey\SDK\Service\Exception\InvalidCredentialsError $e ) { // Invalid credentials response
-						$response = array( 'error' => 'There was an error encountered during the pairing process caused by a misconfiguration.  Please contact the administrator.' );
+						$response =
+							array( 'error' => 'There was an error encountered during the pairing process caused by a misconfiguration.  Please contact the administrator.' );
 					} catch ( \Exception $e ) { // General error response
-						$response = array( 'error' => 'There was an error encountered during the pairing process.  Please contact the administrator.' );
+						$response =
+							array( 'error' => 'There was an error encountered during the pairing process.  Please contact the administrator.' );
 					}
 
 					// Add a new nonce to the response to allow another request
@@ -596,7 +627,9 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 	 */
 	private function get_user_authorized( $user_id ) {
 		$db    = $this->wp_facade->get_wpdb();
-		$value = $db->get_var( $db->prepare( "SELECT meta_value FROM $db->usermeta WHERE user_id = %s AND meta_key = 'launchkey_authorized' LIMIT 1", $user_id ) );
+		$value =
+			$db->get_var( $db->prepare( "SELECT meta_value FROM $db->usermeta WHERE user_id = %s AND meta_key = 'launchkey_authorized' LIMIT 1",
+				$user_id ) );
 		if ( 'true' === $value ) {
 			$authorized = true;
 		} elseif ( 'false' === $value ) {
@@ -606,5 +639,13 @@ class LaunchKey_WP_Native_Client implements LaunchKey_WP_Client {
 		}
 
 		return $authorized;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private function get_option() {
+		return $this->is_multi_site ? $this->wp_facade->get_site_option( LaunchKey_WP_Admin::OPTION_KEY ) :
+			$this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
 	}
 }

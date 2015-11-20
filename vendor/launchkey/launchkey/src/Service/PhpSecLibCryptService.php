@@ -7,6 +7,8 @@
 namespace LaunchKey\SDK\Service;
 
 
+use phpseclib\Crypt\AES;
+use phpseclib\Crypt\RSA;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -72,7 +74,7 @@ class PhpSecLibCryptService implements CryptService
     public function decryptAES($data, $key, $iv, $base64Encoded = true)
     {
         $data = $base64Encoded ? base64_decode($data) : $data;
-        $cipher = new \Crypt_AES();
+        $cipher = new AES();
         $cipher->setKey($key);
         $cipher->setIV($iv);
         $cipher->disablePadding();
@@ -115,11 +117,11 @@ class PhpSecLibCryptService implements CryptService
      */
     private function getSignor($rsaKey, $password = null)
     {
-        $crypt = new \Crypt_RSA();
+        $crypt = new RSA();
         $crypt->loadKey($rsaKey);
         $crypt->setPassword($password);
         $crypt->setHash('sha256');
-        $crypt->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+        $crypt->setSignatureMode(RSA::SIGNATURE_PKCS1);
         return $crypt;
     }
 
@@ -130,7 +132,7 @@ class PhpSecLibCryptService implements CryptService
      */
     private function getRsaCrypt($privateKey, $password = null)
     {
-        $crypt = new \Crypt_RSA();
+        $crypt = new RSA();
         $crypt->loadKey($privateKey);
         $crypt->setPassword($password);
         return $crypt;

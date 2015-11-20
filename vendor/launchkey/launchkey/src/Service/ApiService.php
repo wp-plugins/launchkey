@@ -13,8 +13,14 @@ use LaunchKey\SDK\Domain\DeOrbitCallback;
 use LaunchKey\SDK\Domain\PingResponse;
 use LaunchKey\SDK\Domain\WhiteLabelUser;
 use LaunchKey\SDK\Service\Exception\CommunicationError;
+use LaunchKey\SDK\Service\Exception\ExpiredAuthRequestError;
 use LaunchKey\SDK\Service\Exception\InvalidCredentialsError;
 use LaunchKey\SDK\Service\Exception\InvalidRequestError;
+use LaunchKey\SDK\Service\Exception\InvalidResponseError;
+use LaunchKey\SDK\Service\Exception\LaunchKeyEngineError;
+use LaunchKey\SDK\Service\Exception\NoPairedDevicesError;
+use LaunchKey\SDK\Service\Exception\NoSuchUserError;
+use LaunchKey\SDK\Service\Exception\RateLimitExceededError;
 use LaunchKey\SDK\Service\Exception\UnknownCallbackActionError;
 
 /**
@@ -55,6 +61,7 @@ interface ApiService
      * @throws CommunicationError If there was an error communicating with the endpoint
      * @throws InvalidCredentialsError If the credentials supplied to the endpoint were invalid
      * @throws InvalidRequestError If the endpoint proclaims the request invalid
+     * @throws InvalidResponseError If the response returned is not properly formed
      * @throws ExpiredAuthRequestError If the auth request has expired
      */
     public function poll($authRequest);
@@ -77,7 +84,7 @@ interface ApiService
     /**
      * Create a white label user with the following identifier
      *
-     * @param $identifier Unique and permanent identifier for the user in the white label application.  This identifier
+     * @param string $identifier Unique and permanent identifier for the user in the white label application.  This identifier
      * will be used in all future communications regarding this user.  As such, it cannot ever change.
      *
      * @return WhiteLabelUser

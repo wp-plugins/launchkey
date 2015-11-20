@@ -23,13 +23,25 @@ class LaunchKey_WP_OAuth_Client implements LaunchKey_WP_Client {
 	private $template;
 
 	/**
+	 * @var bool
+	 */
+	private $is_multi_site;
+
+	/**
 	 * LaunchKey_WP_OAuth_Client constructor.
 	 *
 	 * @param LaunchKey_WP_Global_Facade $wp_facade
+	 * @param LaunchKey_WP_Template $template
+	 * @param bool $is_multi_site
 	 */
-	public function __construct( LaunchKey_WP_Global_Facade $wp_facade, LaunchKey_WP_Template $template ) {
+	public function __construct(
+			LaunchKey_WP_Global_Facade $wp_facade,
+			LaunchKey_WP_Template $template,
+			$is_multi_site
+	) {
 		$this->wp_facade = $wp_facade;
 		$this->template  = $template;
+		$this->is_multi_site = $is_multi_site;
 	}
 
 	/**
@@ -54,7 +66,7 @@ class LaunchKey_WP_OAuth_Client implements LaunchKey_WP_Client {
 	 * @since 1.0.0
 	 */
 	public function launchkey_logout() {
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 		if ( isset( $_COOKIE['launchkey_access_token'] ) ) {
 			$this->wp_facade->wp_remote_get(
 				'https://oauth.launchkey.com/logout?access_token=' . $_COOKIE['launchkey_access_token'],
@@ -106,7 +118,7 @@ class LaunchKey_WP_OAuth_Client implements LaunchKey_WP_Client {
 	 * @param string $style A string of HTML style code tto set on the "style" attribute of a containing DIV for the login button
 	 */
 	public function launchkey_form( $class = '', $id = '', $style = '' ) {
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 
 
 		if ( isset( $_GET['launchkey_error'] ) ) {
@@ -195,7 +207,7 @@ class LaunchKey_WP_OAuth_Client implements LaunchKey_WP_Client {
 	 */
 	public function launchkey_admin_callback() {
 
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 
 		if ( isset( $_GET['launchkey_admin_pair'] ) ) {
 			$user = $this->wp_facade->wp_get_current_user();
@@ -328,7 +340,7 @@ class LaunchKey_WP_OAuth_Client implements LaunchKey_WP_Client {
 	 * @return array|WP_Error
 	 */
 	private function get_token_for_code( $response_code ) {
-		$options = $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
+		$options = $this->get_option();
 
 		//prepare request data for access token
 		$data                  = array();
@@ -432,5 +444,12 @@ class LaunchKey_WP_OAuth_Client implements LaunchKey_WP_Client {
 			//previously authenticated
 			$this->wp_facade->wp_redirect( $this->wp_facade->admin_url( "profile.php?launchkey_admin_pair=1&updated=1" ) );
 		}
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private function get_option() {
+		return $this->is_multi_site ? $this->wp_facade->get_site_option( LaunchKey_WP_Admin::OPTION_KEY ) : $this->wp_facade->get_option( LaunchKey_WP_Admin::OPTION_KEY );
 	}
 }
